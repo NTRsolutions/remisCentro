@@ -4,8 +4,11 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -38,6 +41,8 @@ import android.widget.Toast;
 import com.apreciasoft.admin.asremis.Activity.HomeActivity;
 import com.apreciasoft.admin.asremis.Activity.MainActivity;
 import com.apreciasoft.admin.asremis.Entity.InfoTravelEntity;
+import com.apreciasoft.admin.asremis.Entity.TravelEntity;
+import com.apreciasoft.admin.asremis.Entity.TravelSqliteEntity;
 import com.apreciasoft.admin.asremis.Entity.token;
 import com.apreciasoft.admin.asremis.Entity.tokenFull;
 import com.apreciasoft.admin.asremis.Http.HttpConexion;
@@ -45,6 +50,7 @@ import com.apreciasoft.admin.asremis.R;
 import com.apreciasoft.admin.asremis.Services.ServicesLoguin;
 import com.apreciasoft.admin.asremis.Util.DataParser;
 import com.apreciasoft.admin.asremis.Util.GlovalVar;
+import com.apreciasoft.admin.asremis.Util.SqliteUtil;
 import com.apreciasoft.admin.asremis.Util.Utils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -122,6 +128,8 @@ public class HomeFragment extends Fragment implements
     public static Socket SPCKETMAP;
     public static String URL_SOCKET_MAP =  HttpConexion.PROTOCOL+"://"+HttpConexion.ip+":"+HttpConexion.portWsWeb+"";
     public static String MY_EVENT_MAP = "init";
+    public static SqliteUtil AsRemisSqlite;
+
     /*++++++++++++*/
 
     private static View view;
@@ -971,6 +979,15 @@ public class HomeFragment extends Fragment implements
 
 
                         double DISTANCE = Utils.round(HomeFragment.calculateMiles(true)[0]* 0.001,2);
+
+                        /*
+                        * GUARDAMOS LA DITANCIA DEL RECORRIDO EN EL SQLITE LOCAL
+                         */
+                            safeDistance(HomeActivity.currentTravel.getIdTravel(),DISTANCE);
+                        /*
+                        -----------------------------------------------------------
+                         */
+
                         HomeFragment.txt_distance_real.setText(Utils.round(DISTANCE,2)+"Km");
 
 
@@ -1158,6 +1175,9 @@ public class HomeFragment extends Fragment implements
 
         editor.putFloat("distanceTravel",  newDistanceSave);
         editor.commit();*/
+
+
+       // totalDistance = getDistanceSafe(HomeActivity.currentTravel.getIdTravel());
 
 
         return  new float[]{totalDistance, totalDistanceVuelta};
@@ -1522,4 +1542,133 @@ public class HomeFragment extends Fragment implements
     }
     /*******************/
 
+
+    public void safeDistance(int idTravel,double distance) {
+        //Evento On Click para eliminar un producto de la tabla Ventas 	por el nombre
+
+        //Se inicializa la clase.
+        AsRemisSqlite = new SqliteUtil(view.getContext());
+
+        SQLiteDatabase sqlite = AsRemisSqlite.getWritableDatabase();
+
+
+                if(distance > 0) {
+                    //Clase que permite llamar a los métodos para crear, eliminar, leer y actualizar registros. Se establecen permisos de escritura.
+                    sqlite = AsRemisSqlite.getWritableDatabase();
+                    ContentValues content = new ContentValues();
+
+                    //Se añaden los valores introducidos de cada campo mediante clave(columna)/valor(valor introducido en el campo de texto)
+                    content.put(TravelSqliteEntity.COLUMN_ID, idTravel);
+                    content.put(TravelSqliteEntity.COLUMN_DISTANCE, distance);
+                    content.put(TravelSqliteEntity.IS_DRETURN, HomeActivity.isRoundTrip);
+                    sqlite.insert(TravelSqliteEntity.TABLE_NAME, null, content);
+                }
+
+
+        //Se cierra la conexión abierta a la Base de Datos
+        sqlite.close();
+
+    }
+
+    public static void removeTravel(int idTravel){
+
+            //Se inicializa la clase.
+             AsRemisSqlite = new SqliteUtil(view.getContext());
+
+            //Se establecen permisos de escritura
+            SQLiteDatabase sqlite = AsRemisSqlite.getWritableDatabase();
+
+            //Se especifica en la cláusula WHERE el campo Producto y el producto introducido en el campo de texto a eliminar
+             String WHERE = "WHERE " + TravelSqliteEntity.COLUMN_ID + " = '" + idTravel + "'";
+
+            //Se borra el producto indicado en el campo de texto
+            sqlite.delete(TravelSqliteEntity.TABLE_NAME, WHERE, null);
+
+            //Se cierra la conexión abierta a la Base de Datos
+            sqlite.close();
+    }
+
+    public static Float  getDistanceSafe(int idTravel){
+
+        AsRemisSqlite = new SqliteUtil(view.getContext());
+
+        float COLUMN_DISTANCE = 0,_DISTANCE = 0;
+        List<Float> listPointSave = new ArrayList<Float>();
+
+
+        //Cláusula WHERE para buscar por producto
+        String WHERE =  TravelSqliteEntity.COLUMN_ID + " = '" + idTravel + "'";
+
+
+        String[] columnas = {
+                TravelSqliteEntity.COLUMN_DISTANCE
+        };
+
+        SQLiteDatabase sqlite = AsRemisSqlite.getWritableDatabase();
+
+        //Ejecuta la sentencia devolviendo los resultados de los parámetros pasados de tabla, columnas, producto y orden de los resultados obtenidos.
+        Cursor cursor = sqlite.query(TravelSqliteEntity.TABLE_NAME, columnas, WHERE, null, null, null,null);
+
+        //Nos aseguramos de que existe al menos un registro
+        if (cursor.moveToFirst()) {
+            //Recorremos el cursor hasta que no haya más registros
+            float OLD_COLUMN_DISTANCE = 0;
+            do {
+                COLUMN_DISTANCE = cursor.getFloat(0);
+
+                if(OLD_COLUMN_DISTANCE > COLUMN_DISTANCE){
+                    listPointSave.add(OLD_COLUMN_DISTANCE);
+                    _DISTANCE = _DISTANCE + OLD_COLUMN_DISTANCE;
+                }
+                OLD_COLUMN_DISTANCE = COLUMN_DISTANCE;
+
+
+            } while(cursor.moveToNext());
+        }
+
+        if(listPointSave.size() == 0){
+            _DISTANCE = COLUMN_DISTANCE;
+        }
+
+
+        sqlite.close();
+
+
+        return _DISTANCE;
+    }
+
+    public static Float  getDistanceFilter(int idTravel,int isReturn){
+
+        AsRemisSqlite = new SqliteUtil(view.getContext());
+
+        float COLUMN_DISTANCE = 0,_DISTANCE = 0;
+
+        //Cláusula WHERE para buscar por producto
+        String WHERE =  TravelSqliteEntity.COLUMN_ID + " = '" + idTravel + "' AND "+TravelSqliteEntity.IS_DRETURN+" = "+isReturn+" LIMIT 1";
+
+
+        String[] columnas = {
+                TravelSqliteEntity.COLUMN_DISTANCE
+        };
+
+        SQLiteDatabase sqlite = AsRemisSqlite.getWritableDatabase();
+
+        //Ejecuta la sentencia devolviendo los resultados de los parámetros pasados de tabla, columnas, producto y orden de los resultados obtenidos.
+        Cursor cursor = sqlite.query(TravelSqliteEntity.TABLE_NAME, columnas, WHERE, null, null, null,null);
+
+        //Nos aseguramos de que existe al menos un registro
+        if (cursor.moveToFirst()) {
+            //Recorremos el cursor hasta que no haya más registros
+            do {
+                _DISTANCE = cursor.getFloat(0);
+
+            } while(cursor.moveToNext());
+        }
+
+
+        sqlite.close();
+
+
+        return _DISTANCE;
+    }
 }

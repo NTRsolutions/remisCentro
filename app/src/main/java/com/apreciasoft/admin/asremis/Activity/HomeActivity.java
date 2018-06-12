@@ -1194,12 +1194,16 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
             /* DITANCIA TOTAL RECORRIDA */
-            m_total  = HomeFragment.calculateMiles(false)[0];//BUSCAMOS LA DISTANCIA TOTLA
+            //m_total  = HomeFragment.calculateMiles(false)[0];//BUSCAMOS LA DISTANCIA TOTLA
+            m_total  = HomeFragment.getDistanceSafe(currentTravel.getIdTravel());//BUSCAMOS LA DISTANCIA TOTLA
+
 
             Log.d("-TRAVEL totalDistance-", String.valueOf( m_total));
 
             /// if(m_total > 0){
-            kilometros_total = (m_total) * 0.001;//LO CONVERTIMOS A KILOMETRO y sumamos la distancia salvada
+            kilometros_total = m_total;//LO CONVERTIMOS A KILOMETRO y sumamos la distancia salvada
+
+            //kilometros_total = (m_total) * 0.001;//LO CONVERTIMOS A KILOMETRO y sumamos la distancia salvada
        /* }else {
             kilometros_total = (currentTravel.getDistanceSave()) * 0.001;//LO CONVERTIMOS A KILOMETRO y sumamos la distancia salvada
 
@@ -1214,14 +1218,16 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             //**************************//
 
             /* DITANCIA TOTAL VULETA */
-            m_vuelta  = HomeFragment.calculateMiles(false)[1];//BUSCAMOS LA DISTANCIA VUELTA
-            kilometros_vuelta = m_vuelta * 0.001;//LO CONVERTIMOS A KILOMETRO
+//            m_vuelta  = HomeFragment.calculateMiles(false)[1];//BUSCAMOS LA DISTANCIA VUELTA
+            m_vuelta  = HomeFragment.getDistanceFilter(currentTravel.getIdTravel(),1);//BUSCAMOS LA DISTANCIA VUELTA
+
+            kilometros_vuelta = m_vuelta ;//LO CONVERTIMOS A KILOMETRO
             //**************************//
 
             /* DITANCIA TOTAL IDA */
             km_ida = kilometros_total - kilometros_vuelta;
             m_ida  = m_total - m_vuelta;//BUSCAMOS LA DISTANCIA IDA
-            kilometros_ida = m_ida * 0.001;//LO CONVERTIMOS A KILOMETRO
+            kilometros_ida = m_ida ;//LO CONVERTIMOS A KILOMETRO
             //**************************//
 
 
@@ -2443,8 +2449,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         lg.setVisibility(View.INVISIBLE);
 
                         gloval.setGv_hour_init_travel(0);// GUARDAMOS LA HORA QUE LO INICIO
-                        // editor.putFloat("distanceTravel", 0);
-                        //editor.commit();
 
                     }
 
