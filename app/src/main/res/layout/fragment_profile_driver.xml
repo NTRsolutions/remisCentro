@@ -141,7 +141,7 @@
                 android:layout_alignParentTop="true"
                 android:paddingTop="10dp"
                 android:textSize="17dp"
-                android:text="DNI:"
+                android:text="@string/title_document"
                 android:textColor="@color/place_autocomplete_prediction_secondary_text" />
         </RelativeLayout>
 
