@@ -1788,102 +1788,103 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public  void setLocationVehicheDriver()
     {
 
+        if (currentTravel != null ) {
+            if (currentTravel.getIdTravel() == 5) {
 
 
-        if (this.daoTravel == null) {
-            this.daoTravel = HttpConexion.getUri().create(ServicesTravel.class);
-        }
-
-        try {
-
-            String lat = "";
-            String lon = "";
-            String add = "";
-
-
-            if (HomeFragment.getmLastLocation() != null) {
-                lat = String.valueOf(HomeFragment.getmLastLocation().getLatitude());
-                lon = String.valueOf(HomeFragment.getmLastLocation().getLongitude());
-                add = HomeFragment.nameLocation;
-            }
-
-            Log.d("setLocationVehicheDriver 00", String.valueOf(HomeFragment.nameLocation));
-            Log.d("setLocationVehicheDriver  01", "**"+add);
-
-            if(add != "") {
-
-                // Log.d("setLocationVehicheDriver  ", "PASO 1");
-                int idTrave = 0;
-                int idClientKf = 0;
-
-                if (currentTravel != null) {
-                    idTrave = currentTravel.getIdTravel();
-                    idClientKf = currentTravel.getIdClientKf();
+                if (this.daoTravel == null) {
+                    this.daoTravel = HttpConexion.getUri().create(ServicesTravel.class);
                 }
 
-                TraveInfoSendEntity travel =
-                        new TraveInfoSendEntity(new
-                                TravelLocationEntity(
-                                gloval.getGv_user_id(),
-                                idTrave,
-                                add,
-                                lon,
-                                lat,
-                                gloval.getGv_id_driver(),
-                                gloval.getGv_id_vehichle(),
-                                idClientKf,
-                                HomeFragment.calculateMiles(false)[0]
+                try {
+
+                    String lat = "";
+                    String lon = "";
+                    String add = "";
 
 
-                        )
-                        );
+                    if (HomeFragment.getmLastLocation() != null) {
+                        lat = String.valueOf(HomeFragment.getmLastLocation().getLatitude());
+                        lon = String.valueOf(HomeFragment.getmLastLocation().getLongitude());
+                        add = HomeFragment.nameLocation;
+                    }
 
+                    Log.d("setLocationVehicheDriver 00", String.valueOf(HomeFragment.nameLocation));
+                    Log.d("setLocationVehicheDriver  01", "**" + add);
 
-                GsonBuilder builder = new GsonBuilder();
-                Gson gson = builder.create();
-                Log.d("setLocationVehicheDriver", gson.toJson(travel));
+                    if (add != "") {
 
+                        // Log.d("setLocationVehicheDriver  ", "PASO 1");
+                        int idTrave = 0;
+                        int idClientKf = 0;
 
-                Call<RemisSocketInfo> call = this.daoTravel.sendPosition(travel);
-
-                call.enqueue(new Callback<RemisSocketInfo>() {
-                    @Override
-                    public void onResponse(Call<RemisSocketInfo> call, Response<RemisSocketInfo> response) {
-
-                        Log.d("setLocationVehicheDriver Response raw header", response.headers().toString());
-                        Log.d("setLocationVehicheDriver Response raw", String.valueOf(response.raw().body()));
-                        Log.d("setLocationVehicheDriver Response code", String.valueOf(response.code()));
-
-                        if (response.code() == 200) {
-
-                            RemisSocketInfo list = (RemisSocketInfo) response.body();
-                            notificate(list.getListNotification(), list.getListReservations());
-                            fn_refhesh();
-
-
+                        if (currentTravel != null) {
+                            idTrave = currentTravel.getIdTravel();
+                            idClientKf = currentTravel.getIdClientKf();
                         }
 
+                        TraveInfoSendEntity travel =
+                                new TraveInfoSendEntity(new
+                                        TravelLocationEntity(
+                                        gloval.getGv_user_id(),
+                                        idTrave,
+                                        add,
+                                        lon,
+                                        lat,
+                                        gloval.getGv_id_driver(),
+                                        gloval.getGv_id_vehichle(),
+                                        idClientKf,
+                                        HomeFragment.calculateMiles(false)[0]
+
+
+                                )
+                                );
+
+
+                        GsonBuilder builder = new GsonBuilder();
+                        Gson gson = builder.create();
+                        Log.d("setLocationVehicheDriver", gson.toJson(travel));
+
+
+                        Call<RemisSocketInfo> call = this.daoTravel.sendPosition(travel);
+
+                        call.enqueue(new Callback<RemisSocketInfo>() {
+                            @Override
+                            public void onResponse(Call<RemisSocketInfo> call, Response<RemisSocketInfo> response) {
+
+                                Log.d("setLocationVehicheDriver Response raw header", response.headers().toString());
+                                Log.d("setLocationVehicheDriver Response raw", String.valueOf(response.raw().body()));
+                                Log.d("setLocationVehicheDriver Response code", String.valueOf(response.code()));
+
+                                if (response.code() == 200) {
+
+                                    RemisSocketInfo list = (RemisSocketInfo) response.body();
+                                    notificate(list.getListNotification(), list.getListReservations());
+                                    fn_refhesh();
+
+
+                                }
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<RemisSocketInfo> call, Throwable t) {
+                                Log.d("**ERROR**", t.getMessage());
+                                // Toast.makeText(getApplicationContext(), "ERROR ENVIADO UBICACION!", Toast.LENGTH_LONG).show();
+
+                            }
+                        });
+
                     }
 
-                    @Override
-                    public void onFailure(Call<RemisSocketInfo> call, Throwable t) {
-                        Log.d("**ERROR**", t.getMessage());
-                        // Toast.makeText(getApplicationContext(), "ERROR ENVIADO UBICACION!", Toast.LENGTH_LONG).show();
 
-                    }
-                });
+                } catch (Exception e) {
+                    Log.d("setLocationVehicheDriver", e.getMessage());
+                } finally {
+                    this.daoTravel = null;
+                }
 
             }
-
-
-        }
-        catch (Exception e)
-        {
-            Log.d("setLocationVehicheDriver",e.getMessage());
-        }
-
-        finally {
-            this.daoTravel = null;
         }
     }
 
