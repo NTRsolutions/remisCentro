@@ -2444,6 +2444,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
                         tiempoTxt = 0;
                         textTiempo.setVisibility(View.INVISIBLE);
+                        extraTime = 0;
 
 
                         final LinearLayout lg = (LinearLayout) findViewById(R.id.payment);
