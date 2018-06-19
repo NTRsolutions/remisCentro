@@ -1789,7 +1789,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     {
 
         if (currentTravel != null ) {
-            if (currentTravel.getIdTravel() == 5) {
+            if (currentTravel.getIdSatatusTravel() == 5) {
 
 
                 if (this.daoTravel == null) {
