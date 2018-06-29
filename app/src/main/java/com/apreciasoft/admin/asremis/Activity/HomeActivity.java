@@ -1,5 +1,8 @@
 package com.apreciasoft.admin.asremis.Activity;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.FragmentManager;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
@@ -11,6 +14,8 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.LayerDrawable;
 import android.location.Location;
 import android.location.LocationManager;
@@ -170,6 +175,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public static String mp_paymentTypeId = "";
     public static String mp_paymentstatus = "";
     public static boolean _PAYCREDITCAR_OK = false;
+
+    private static final String TAG = "AnimationStarter";
+    private ObjectAnimator textColorAnim;
 
 
     public DecimalFormat df = new DecimalFormat("####0.00");
@@ -536,6 +544,25 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         _activeTimer();
 
 
+        tiempoTxt = pref.getInt("time_slepp", 0);
+        if(tiempoTxt > 0){
+            textTiempo.setVisibility(View.VISIBLE);
+            textTiempo.setText(Utils.covertSecoungToHHMMSS(tiempoTxt));
+        }else {
+            textTiempo.setVisibility(View.INVISIBLE);
+
+        }
+
+        textColorAnim = ObjectAnimator.ofInt(textTiempo, "textColor", Color.parseColor("#26c281"), Color.TRANSPARENT);
+        textColorAnim.setDuration(2000);
+        textColorAnim.setEvaluator(new ArgbEvaluator());
+        textColorAnim.setRepeatCount(ValueAnimator.INFINITE);
+        textColorAnim.setRepeatMode(ValueAnimator.REVERSE);
+        textColorAnim.start();
+
+
+
+
     }
 
 
@@ -694,6 +721,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 setInfoTravel();
 
                 tiempoTxt = 0;
+                extraTime = 0;
+                editor.putInt("time_slepp", 0);
+                editor.commit(); // commit changes
+
                 textTiempo.setVisibility(View.INVISIBLE);
 
                 // _activeTimer();
@@ -711,6 +742,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 setInfoTravel();
 
                 tiempoTxt = 0;
+                extraTime = 0;
+                editor.putInt("time_slepp", 0);
+                editor.commit(); // commit changes
+
                 textTiempo.setVisibility(View.INVISIBLE);
 
                 //  _activeTimer();
@@ -726,6 +761,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 setInfoTravel();
 
                 tiempoTxt = 0;
+                extraTime =0;
+                editor.putInt("time_slepp", 0);
+                editor.commit(); // commit changes
+
                 textTiempo.setVisibility(View.INVISIBLE);
 
                 //_activeTimer();
@@ -799,6 +838,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void controlVieTravel() {
         try {
+
 
 
             Log.d("currentTravel", "CONTROL");
@@ -1003,11 +1043,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public void stopTime() {
         loadingCronometro.dismiss();
         tiempo.Detener();
-        tiempoTxt = tiempoTxt + tiempo.getSegundos();
-        btnPreFinish.setEnabled(true);
 
+
+        tiempoTxt =  pref.getInt("time_slepp", 0) + tiempo.getSegundos();
+        btnPreFinish.setEnabled(true);
+        editor.putInt("time_slepp", tiempoTxt);
+        editor.commit(); // commit changes
         textTiempo.setVisibility(View.VISIBLE);
-        textTiempo.setText(tiempoTxt + "s");
+        textTiempo.setText(Utils.covertSecoungToHHMMSS(tiempoTxt));
 
         isWait(0);
 
@@ -1150,8 +1193,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     {
 
         try{
-
-
 
             /* VERIFICAMOS METODOS DE PAGO DISPONIBLES */
             if(currentTravel != null)
@@ -1597,8 +1638,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_exit) {
             try {
@@ -1612,19 +1651,16 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         else if (id == R.id.action_notifications) {
 
             fn_gotonotification();
-
             return true;
         }
         else if (id == R.id.action_reervations) {
 
             fn_gotoreservation();
-
             return true;
         }
         else if (id == R.id.action_refhesh) {
 
             fn_refhesh();
-
             return true;
         }
         else if (id == R.id.action_profile) {
@@ -1648,24 +1684,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         {
 
             if(_NOCONEXION == false) {
-
-                final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-                alertDialog.setTitle("Sin Conexion a Internet,  cerifica tu Conexion");
-                alertDialog.setCancelable(false);
-                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Verificar",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-
-                                startActivity(new Intent(android.provider.Settings.ACTION_SETTINGS));
-                                //finish();
-                                alertDialog.dismiss();
-                                // System.exit(0);
-
-
-                            }
-                        });
-                alertDialog.show();
+                showAlertNoConexion();
                 _NOCONEXION = true;
             }
 
@@ -1675,41 +1694,45 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
     private void fn_refhesh() {
-
-        getParam();
-        getCurrentTravelByIdDriver();
-
+        if( Utils.verificaConexion(this) == false) {showAlertNoConexion();}else { // VERIFICADOR DE CONEXION
+            this.getParam();
+            this.getCurrentTravelByIdDriver();
+        }
     }
 
     public  void  fn_gotoprofile()
     {
-        FragmentManager fm = getFragmentManager();
+        if( Utils.verificaConexion(this) == false) {showAlertNoConexion();}else { // VERIFICADOR DE CONEXION
 
-        // VERIFICAMO SI E UN CHOFER //
-        if(gloval.getGv_id_profile() == 3)
-        {
-            fm.beginTransaction().replace(R.id.content_frame,new ProfileDriverFr()).commit();
-        }
-        // VERIFICAMO SI E UN CLIENTE PÁRTICULAR//
-        else if(gloval.getGv_id_profile() == 2)
-        {
-            fm.beginTransaction().replace(R.id.content_frame,new ProfileClientFr()).commit();
+            FragmentManager fm = getFragmentManager();
+
+            // VERIFICAMO SI E UN CHOFER //
+            if (gloval.getGv_id_profile() == 3) {
+                fm.beginTransaction().replace(R.id.content_frame, new ProfileDriverFr()).commit();
+            }
+            // VERIFICAMO SI E UN CLIENTE PÁRTICULAR//
+            else if (gloval.getGv_id_profile() == 2) {
+                fm.beginTransaction().replace(R.id.content_frame, new ProfileClientFr()).commit();
+            }
         }
     }
 
 
     public void fn_gotonotification()
     {
-
-        FragmentManager fm = getFragmentManager();
-        fm.beginTransaction().replace(R.id.content_frame,new NotificationsFrangment()).commit();
+        if( Utils.verificaConexion(this) == false) {showAlertNoConexion();}else { // VERIFICADOR DE CONEXION
+            FragmentManager fm = getFragmentManager();
+            fm.beginTransaction().replace(R.id.content_frame, new NotificationsFrangment()).commit();
+        }
     }
 
     public void fn_gotoreservation()
     {
+        if( Utils.verificaConexion(this) == false) {showAlertNoConexion();}else { // VERIFICADOR DE CONEXION
 
-        FragmentManager fm = getFragmentManager();
-        fm.beginTransaction().replace(R.id.content_frame,new ReservationsFrangment()).commit();
+            FragmentManager fm = getFragmentManager();
+            fm.beginTransaction().replace(R.id.content_frame, new ReservationsFrangment()).commit();
+        }
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -1718,26 +1741,26 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
         FragmentManager fm = getFragmentManager();
 
+        if( Utils.verificaConexion(this) == false) {showAlertNoConexion();}else { // VERIFICADOR DE CONEXION
+            if (id == R.id.nav_camera) {
+                fm.beginTransaction().replace(R.id.content_frame, new HomeFragment()).commit();
+
+            } else if (id == R.id.nav_gallery) {
+                fm.beginTransaction().replace(R.id.content_frame, new HistoryTravelDriver()).commit();
+
+            } else if (id == R.id.nav_slideshow) {
+                fm.beginTransaction().replace(R.id.content_frame, new AcountDriver()).commit();
 
 
-        if (id == R.id.nav_camera) {
-            fm.beginTransaction().replace(R.id.content_frame,new HomeFragment()).commit();
+            } else if (id == R.id.nav_manage) {
+                fm.beginTransaction().replace(R.id.content_frame, new NotificationsFrangment()).commit();
 
-        } else if (id == R.id.nav_gallery) {
-            fm.beginTransaction().replace(R.id.content_frame,new HistoryTravelDriver()).commit();
+            } else if (id == R.id.nav_reservations) {
+                fn_gotoreservation();
 
-        } else if (id == R.id.nav_slideshow) {
-            fm.beginTransaction().replace(R.id.content_frame,new AcountDriver()).commit();
+            } else if (id == R.id.nav_send) {
 
-
-        } else if (id == R.id.nav_manage) {
-            fm.beginTransaction().replace(R.id.content_frame,new NotificationsFrangment()).commit();
-
-        } else if (id == R.id.nav_reservations) {
-            fn_gotoreservation();
-
-        } else if (id == R.id.nav_send) {
-
+            }
         }
 
         drawer.closeDrawer(GravityCompat.START);
@@ -1931,62 +1954,63 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     // RECHAZAR VIAJE //
     public void cancelTravel(int idTravel)
     {
-        if (this.daoTravel == null) { this.daoTravel = HttpConexion.getUri().create(ServicesTravel.class); }
+        if( Utils.verificaConexion(this) == false) {showAlertNoConexion();}else { // VERIFICADOR DE CONEXION
+
+            if (this.daoTravel == null) {
+                this.daoTravel = HttpConexion.getUri().create(ServicesTravel.class);
+            }
 
 
-        if(idTravel == -1)
-        {
-            idTravel = gloval.getGv_travel_current().idTravel;
-        }
+            if (idTravel == -1) {
+                idTravel = gloval.getGv_travel_current().idTravel;
+            }
 
-        try {
+            try {
 
-            loading = ProgressDialog.show(HomeActivity.this, "Enviado", "Espere unos Segundos...", true, false);
-
+                loading = ProgressDialog.show(HomeActivity.this, "Enviado", "Espere unos Segundos...", true, false);
 
 
-            Call<InfoTravelEntity> call = this.daoTravel.refuse(idTravel);
+                Call<InfoTravelEntity> call = this.daoTravel.refuse(idTravel);
 
 
+                call.enqueue(new Callback<InfoTravelEntity>() {
+                    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                    @Override
+                    public void onResponse(Call<InfoTravelEntity> call, Response<InfoTravelEntity> response) {
 
-            call.enqueue(new Callback<InfoTravelEntity>() {
-                @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-                @Override
-                public void onResponse(Call<InfoTravelEntity> call, Response<InfoTravelEntity> response) {
-
-                    loading.dismiss();
-                    Toast.makeText(getApplicationContext(), "VIAJE RECHAZADO!", Toast.LENGTH_LONG).show();
+                        loading.dismiss();
+                        Toast.makeText(getApplicationContext(), "VIAJE RECHAZADO!", Toast.LENGTH_LONG).show();
 
 
-                    if(dialogTravel != null)
-                    {
-                        dialogTravel.dismiss();
+                        if (dialogTravel != null) {
+                            dialogTravel.dismiss();
+                        }
+
+                        cliaerNotificationAndoid();
+                        // viewAlert = false;
+                        gloval.setGv_travel_current(null);
+                        currentTravel = null;
+                        btCancelVisible(false);
+                        btInitVisible(false);
+                        HomeFragment.clearInfo();
+                        viewAlert = false;
+
+
                     }
 
-                    cliaerNotificationAndoid();
-                    // viewAlert = false;
-                    gloval.setGv_travel_current(null);
-                    currentTravel = null;
-                    btCancelVisible(false);
-                    btInitVisible(false);
-                    HomeFragment.clearInfo();
-                    viewAlert = false;
+                    public void onFailure(Call<InfoTravelEntity> call, Throwable t) {
+                        loading.dismiss();
+
+                        Snackbar.make(findViewById(android.R.id.content),
+                                "ERROR (" + t.getMessage() + ")", Snackbar.LENGTH_LONG).show();
+                    }
 
 
-                }
+                });
 
-                public void onFailure(Call<InfoTravelEntity> call, Throwable t) {
-                    loading.dismiss();
-
-                    Snackbar.make(findViewById(android.R.id.content),
-                            "ERROR ("+t.getMessage()+")", Snackbar.LENGTH_LONG).show();
-                }
-
-
-            });
-
-        } finally {
-            this.daoTravel = null;
+            } finally {
+                this.daoTravel = null;
+            }
         }
     }
 
@@ -2038,219 +2062,232 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     /* SERVICIO PARA RETORNAR UN VIAJE EN EL MONITOR DDE VIAJES */
     public  void  isRoundTrip()
     {
+        if( Utils.verificaConexion(this) == false) {showAlertNoConexion();}else { // VERIFICADOR DE CONEXION
 
-        if (this.daoTravel == null) { this.daoTravel = HttpConexion.getUri().create(ServicesTravel.class); }
-
-
-        try {
-            Call<Boolean> call = this.daoTravel.isRoundTrip(currentTravel.idTravel);
-
-            Log.d("fatal", call.request().toString());
-            Log.d("fatal", call.request().headers().toString());
-
-            call.enqueue(new Callback<Boolean>() {
-                @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-                @Override
-                public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-
-                    isRoundTrip = true;
-                    Toast.makeText(getApplicationContext(), "Vuelta Activada!", Toast.LENGTH_LONG).show();
-                    currentTravel.setRoundTrip(true);
-                    setInfoTravel();
-
-                }
-
-                public void onFailure(Call<Boolean> call, Throwable t) {
-                    Snackbar.make(findViewById(android.R.id.content),
-                            "ERROR ("+t.getMessage()+")", Snackbar.LENGTH_LONG).show();
-                }
+            if (this.daoTravel == null) {
+                this.daoTravel = HttpConexion.getUri().create(ServicesTravel.class);
+            }
 
 
-            });
+            try {
+                Call<Boolean> call = this.daoTravel.isRoundTrip(currentTravel.idTravel);
 
-        } finally {
-            this.daoTravel = null;
+                Log.d("fatal", call.request().toString());
+                Log.d("fatal", call.request().headers().toString());
+
+                call.enqueue(new Callback<Boolean>() {
+                    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                    @Override
+                    public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+
+                        isRoundTrip = true;
+                        Toast.makeText(getApplicationContext(), "Vuelta Activada!", Toast.LENGTH_LONG).show();
+                        currentTravel.setRoundTrip(true);
+                        setInfoTravel();
+
+                    }
+
+                    public void onFailure(Call<Boolean> call, Throwable t) {
+                        Snackbar.make(findViewById(android.R.id.content),
+                                "ERROR (" + t.getMessage() + ")", Snackbar.LENGTH_LONG).show();
+                    }
+
+
+                });
+
+            } finally {
+                this.daoTravel = null;
+            }
         }
     }
 
     /* SERVICIO PARA INDICAR ESPERA DE UN VIAJE EN EL MONITOR DDE VIAJES */
     public  void  isWait(int value)
     {
+        if( Utils.verificaConexion(this) == false) {showAlertNoConexion();}else { // VERIFICADOR DE CONEXION
 
-        if (this.daoTravel == null) { this.daoTravel = HttpConexion.getUri().create(ServicesTravel.class); }
-
-
-        try {
-            Call<Boolean> call = this.daoTravel.isWait(currentTravel.idTravel,value);
-
-            Log.d("fatal", call.request().toString());
-
-            call.enqueue(new Callback<Boolean>() {
-                @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-                @Override
-                public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-
-                    setInfoTravel();
-
-                }
-
-                public void onFailure(Call<Boolean> call, Throwable t) {
-                    Snackbar.make(findViewById(android.R.id.content),
-                            "ERROR ("+t.getMessage()+")", Snackbar.LENGTH_LONG).show();
-                }
+            if (this.daoTravel == null) {
+                this.daoTravel = HttpConexion.getUri().create(ServicesTravel.class);
+            }
 
 
-            });
+            try {
+                Call<Boolean> call = this.daoTravel.isWait(currentTravel.idTravel, value);
 
-        } finally {
-            this.daoTravel = null;
+                Log.d("fatal", call.request().toString());
+
+                call.enqueue(new Callback<Boolean>() {
+                    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                    @Override
+                    public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+
+                        setInfoTravel();
+
+                    }
+
+                    public void onFailure(Call<Boolean> call, Throwable t) {
+                        Snackbar.make(findViewById(android.R.id.content),
+                                "ERROR (" + t.getMessage() + ")", Snackbar.LENGTH_LONG).show();
+                    }
+
+
+                });
+
+            } finally {
+                this.daoTravel = null;
+            }
         }
     }
 
     public  void  getCurrentTravelByIdDriver()
     {
-
-        if (this.daoTravel == null) { this.daoTravel = HttpConexion.getUri().create(ServicesTravel.class); }
-
-
-        try {
-
-            int idDriver = gloval.getGv_id_driver();
-
-            if(idDriver == 0){
-                idDriver =  pref.getInt("driver_id", 0);
-                gloval.setGv_id_driver(idDriver);
+        if( Utils.verificaConexion(this) == false) {showAlertNoConexion();}else { // VERIFICADOR DE CONEXION
+            if (this.daoTravel == null) {
+                this.daoTravel = HttpConexion.getUri().create(ServicesTravel.class);
             }
-            Call<InfoTravelEntity> call = this.daoTravel.getCurrentTravelByIdDriver(idDriver);
 
-            Log.d("fatal", call.request().toString());
 
-            call.enqueue(new Callback<InfoTravelEntity>() {
-                @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-                @Override
-                public void onResponse(Call<InfoTravelEntity> call, Response<InfoTravelEntity> response) {
+            try {
 
-                    InfoTravelEntity TRAVEL = (InfoTravelEntity) response.body();
+                int idDriver = gloval.getGv_id_driver();
 
-                    gloval.setGv_travel_current(TRAVEL);
-                    currentTravel = gloval.getGv_travel_current();
-                    controlVieTravel();
+                if (idDriver == 0) {
+                    idDriver = pref.getInt("driver_id", 0);
+                    gloval.setGv_id_driver(idDriver);
                 }
+                Call<InfoTravelEntity> call = this.daoTravel.getCurrentTravelByIdDriver(idDriver);
+                call.enqueue(new Callback<InfoTravelEntity>() {
+                    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                    @Override
+                    public void onResponse(Call<InfoTravelEntity> call, Response<InfoTravelEntity> response) {
 
-                public void onFailure(Call<InfoTravelEntity> call, Throwable t) {
-                    Snackbar.make(findViewById(android.R.id.content),
-                            "ERROR ("+t.getMessage()+")", Snackbar.LENGTH_LONG).show();
-                }
+                        InfoTravelEntity TRAVEL = (InfoTravelEntity) response.body();
+
+                        gloval.setGv_travel_current(TRAVEL);
+                        currentTravel = gloval.getGv_travel_current();
+                        controlVieTravel();
+                    }
+
+                    public void onFailure(Call<InfoTravelEntity> call, Throwable t) {
+                        Snackbar.make(findViewById(android.R.id.content),
+                                "ERROR (" + t.getMessage() + ")", Snackbar.LENGTH_LONG).show();
+                    }
 
 
-            });
+                });
 
-        } finally {
-            this.daoTravel = null;
+            } finally {
+                this.daoTravel = null;
+            }
         }
     }
 
     /* METODO PARA ACEPATAR EL VIAJE*/
     public  void  aceptTravel(int idTravel)
     {
+        if( Utils.verificaConexion(this) == false) {showAlertNoConexion();}else { // VERIFICADOR DE CONEXION
+
+            if (this.daoTravel == null) {
+                this.daoTravel = HttpConexion.getUri().create(ServicesTravel.class);
+            }
 
 
+            try {
+                loading = ProgressDialog.show(HomeActivity.this, "Enviado", "Espere unos Segundos...", true, false);
 
-        if (this.daoTravel == null) {
-            this.daoTravel = HttpConexion.getUri().create(ServicesTravel.class);
-        }
+                Call<InfoTravelEntity> call = this.daoTravel.accept(idTravel);
 
+                Log.d("fatal", call.request().toString());
+                Log.d("fatal", call.request().headers().toString());
 
-        try {
-            loading = ProgressDialog.show(HomeActivity.this, "Enviado", "Espere unos Segundos...", true, false);
+                call.enqueue(new Callback<InfoTravelEntity>() {
+                    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                    @Override
+                    public void onResponse(Call<InfoTravelEntity> call, Response<InfoTravelEntity> response) {
+                        loading.dismiss();
 
-            Call<InfoTravelEntity> call = this.daoTravel.accept(idTravel);
-
-            Log.d("fatal", call.request().toString());
-            Log.d("fatal", call.request().headers().toString());
-
-            call.enqueue(new Callback<InfoTravelEntity>() {
-                @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-                @Override
-                public void onResponse(Call<InfoTravelEntity> call, Response<InfoTravelEntity> response) {
-                    loading.dismiss();
-
-                    Toast.makeText(getApplicationContext(), "VIAJE ACEPTADO...", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "VIAJE ACEPTADO...", Toast.LENGTH_LONG).show();
 //                        Log.d("fatal", response.body().toString());
 
 
-                    btInitVisible(true);
-                    btCancelVisible(true);
-                    cliaerNotificationAndoid();
-                    viewAlert = true;
-                    dialogTravel.dismiss();
-                    currentTravel = response.body();
-                    setInfoTravel();
+                        btInitVisible(true);
+                        btCancelVisible(true);
+                        cliaerNotificationAndoid();
+                        viewAlert = true;
+                        dialogTravel.dismiss();
+                        currentTravel = response.body();
+                        setInfoTravel();
 
-                }
+                    }
 
-                public void onFailure(Call<InfoTravelEntity> call, Throwable t) {
-                    loading.dismiss();
+                    public void onFailure(Call<InfoTravelEntity> call, Throwable t) {
+                        loading.dismiss();
 
-                    Snackbar.make(findViewById(android.R.id.content),
-                            "ERROR (" + t.getMessage() + ")", Snackbar.LENGTH_LONG).show();
-                }
+                        Snackbar.make(findViewById(android.R.id.content),
+                                "ERROR (" + t.getMessage() + ")", Snackbar.LENGTH_LONG).show();
+                    }
 
 
-            });
+                });
 
-        } finally {
+            } finally {
 
-            this.daoTravel = null;
+                this.daoTravel = null;
+            }
         }
 
     }
 
     public  void  initTravel()
     {
-        if (this.daoTravel == null) { this.daoTravel = HttpConexion.getUri().create(ServicesTravel.class); }
+        if( Utils.verificaConexion(this) == false) {showAlertNoConexion();}else { // VERIFICADOR DE CONEXION
+
+            if (this.daoTravel == null) {
+                this.daoTravel = HttpConexion.getUri().create(ServicesTravel.class);
+            }
 
 
-        if(this.checkPermision()) {
-            if (this.checkDistanceSucces()) {
+            if (this.checkPermision()) {
+                if (this.checkDistanceSucces()) {
 
-                try {
-                    loading = ProgressDialog.show(HomeActivity.this, "Enviado", "Espere unos Segundos...", true, false);
+                    try {
+                        loading = ProgressDialog.show(HomeActivity.this, "Enviado", "Espere unos Segundos...", true, false);
 
-                    Call<InfoTravelEntity> call = this.daoTravel.init(currentTravel.getIdTravel());
+                        Call<InfoTravelEntity> call = this.daoTravel.init(currentTravel.getIdTravel());
 
-                    call.enqueue(new Callback<InfoTravelEntity>() {
-                        @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-                        @Override
-                        public void onResponse(Call<InfoTravelEntity> call, Response<InfoTravelEntity> response) {
+                        call.enqueue(new Callback<InfoTravelEntity>() {
+                            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                            @Override
+                            public void onResponse(Call<InfoTravelEntity> call, Response<InfoTravelEntity> response) {
 
-                            loading.dismiss();
-                            btInitVisible(false);
-                            btCancelVisible(false);
-                            btPreFinishVisible(true);
+                                loading.dismiss();
+                                btInitVisible(false);
+                                btCancelVisible(false);
+                                btPreFinishVisible(true);
 
-                            currentTravel = response.body();
-                            setInfoTravel();
+                                currentTravel = response.body();
+                                setInfoTravel();
 
 
-                            //activeTimerInit();
-                        }
+                                //activeTimerInit();
+                            }
 
-                        public void onFailure(Call<InfoTravelEntity> call, Throwable t) {
-                            loading.dismiss();
-                            Snackbar.make(findViewById(android.R.id.content),
-                                    "ERROR (" + t.getMessage() + ")", Snackbar.LENGTH_LONG).show();
-                        }
-                    });
-                    int hours = new Time(System.currentTimeMillis()).getHours();
-                    Log.d("hours", String.valueOf(hours));
-                    gloval.setGv_hour_init_travel(hours);// GUARDAMOS LA HORA QUE LO INICIO
-                } finally {
-                    this.daoTravel = null;
+                            public void onFailure(Call<InfoTravelEntity> call, Throwable t) {
+                                loading.dismiss();
+                                Snackbar.make(findViewById(android.R.id.content),
+                                        "ERROR (" + t.getMessage() + ")", Snackbar.LENGTH_LONG).show();
+                            }
+                        });
+                        int hours = new Time(System.currentTimeMillis()).getHours();
+                        Log.d("hours", String.valueOf(hours));
+                        gloval.setGv_hour_init_travel(hours);// GUARDAMOS LA HORA QUE LO INICIO
+                    } finally {
+                        this.daoTravel = null;
+                    }
+                } else {
+                    Snackbar.make(findViewById(android.R.id.content),
+                            "No puedes iniciar este viaje, debe aproximarse mas al punto de origen", Snackbar.LENGTH_LONG).show();
                 }
-            }else {
-                Snackbar.make(findViewById(android.R.id.content),
-                        "No puedes iniciar este viaje, debe aproximarse mas al punto de origen", Snackbar.LENGTH_LONG).show();
             }
         }
     }
@@ -2259,212 +2296,243 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     /*LLAMAMOS A LA PATALLA DE BOUCHE*/
     public void finishTravelVouche()
     {
-        Intent intent = new Intent(getApplicationContext(), Signature.class);
-        startActivityForResult(intent, SIGNATURE_ACTIVITY);
+        if( Utils.verificaConexion(this) == false) {showAlertNoConexion();}else { // VERIFICADOR DE CONEXION
+            Intent intent = new Intent(getApplicationContext(), Signature.class);
+            startActivityForResult(intent, SIGNATURE_ACTIVITY);
+        }
     }
 
 
     /*LLAMAMOS A LA PATALLA DE MERCADO  PAGO */
     public void finishTravelCreditCar()
     {
+        if( Utils.verificaConexion(this) == false) {showAlertNoConexion();}else { // VERIFICADOR DE CONEXION
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Presiona continuar para realizar el pago con Tarjetas")
-                .setCancelable(false)
-                .setPositiveButton("Continuar", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        idPaymentFormKf = 3;
-                        //finishTravel();
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Presiona continuar para realizar el pago con Tarjetas")
+                    .setCancelable(false)
+                    .setPositiveButton("Continuar", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            idPaymentFormKf = 3;
+                            //finishTravel();
 
-                        //   Intent intent = new Intent(getApplicationContext(), PaymentCreditCar.class);
-                        // intent.putExtra("TotalAmount",this.totalFinal);
+                            //   Intent intent = new Intent(getApplicationContext(), PaymentCreditCar.class);
+                            // intent.putExtra("TotalAmount",this.totalFinal);
 
-                        //startActivityForResult(intent, CREDIT_CAR_ACTIVITY);
-
-
-                        preFinihMpago();
-                    }
-                })
-                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-        AlertDialog alert = builder.create();
-        alert.show();
+                            //startActivityForResult(intent, CREDIT_CAR_ACTIVITY);
 
 
+                            preFinihMpago();
+                        }
+                    })
+                    .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
 
 
+    }
+
+
+    /* ALERTA SIN CONEXION*/
+    public void showAlertNoConexion(){
+        Snackbar snackbar = Snackbar.make(
+                findViewById(android.R.id.content),
+                "¡Problema de conexion a Internet!",
+                30000);
+        snackbar.setActionTextColor(Color.RED);
+        View snackbarView = snackbar.getView();
+        TextView textView = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(Color.WHITE);
+        textView.setTypeface(null, Typeface.BOLD);
+
+        snackbar.setAction("Verificar", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(android.provider.Settings.ACTION_SETTINGS));
+            }
+        });
+
+        snackbar.show();
     }
 
 
     /* METODO PARA FINALIZAR O PREFINALIZAR  UN VIAJE*/
     public  void  finishTravel() {
 
-        if (this.daoTravel == null) { this.daoTravel = HttpConexion.getUri().create(ServicesTravel.class); }
+        if( Utils.verificaConexion(this) == false) {showAlertNoConexion();}else { // VERIFICADOR DE CONEXION
 
-        try {
-            loading = ProgressDialog.show(HomeActivity.this, "Finalizando Viaje", "Espere unos Segundos...", true, false);
-
-
-            if(currentTravel != null) {
-
-                String lat = "";
-                String lon = "";
-                String add = "";
-
-                if (HomeFragment.getmLastLocation() != null) {
-                    lat = String.valueOf(HomeFragment.getmLastLocation().getLatitude());
-                    lon = String.valueOf(HomeFragment.getmLastLocation().getLongitude());
-                    add = HomeFragment.nameLocation;
-                }
-
-                // BUSCAMOS EL VALOR DE EL PEAJE //
-
-                double myDouble;
-                String myString = peajes_txt.getText().toString();
-                if (myString != null && !myString.equals("")) {
-                    myDouble = Double.valueOf(myString);
-                } else {
-                    myDouble = 0;
-                }
-                peajes_txt.setText("");
-
-                double parkin;
-                String parkin_txt = ((EditText) findViewById(R.id.parkin_txt)).getText().toString();
-                if (parkin_txt != null && !parkin_txt.equals("")) {
-                    parkin = Double.valueOf(parkin_txt);
-                } else {
-                    parkin = 0;
-                }
-                ((EditText) findViewById(R.id.parkin_txt)).setText("");
-
-
-                double _RECORIDO_TOTAL = 0;
-                if (kilometros_total > 0) {
-                    _RECORIDO_TOTAL = Utils.round(kilometros_total, 2);
-                }
-
-
-                TraveInfoSendEntity travel =
-                        new TraveInfoSendEntity(new
-                                TravelLocationEntity
-                                (
-                                        currentTravel.getIdTravel(),
-                                        amounCalculateGps,
-                                        //Double.parseDouble(val),
-                                        _RECORIDO_TOTAL,
-                                        df.format(kilometros_total),
-                                        add,
-                                        lon,
-                                        lat,
-                                        myDouble,
-                                        parkin,
-                                        extraTime,
-                                        tiempoTxt + " Segundos",
-                                        idPaymentFormKf,
-                                        mp_jsonPaymentCard,
-                                        mp_paymentMethodId,
-                                        mp_paymentTypeId,
-                                        mp_paymentstatus,
-                                        priceFlet
-
-                                )
-                        );
-
-
-                GsonBuilder builder = new GsonBuilder();
-                Gson gson = builder.create();
-
-
-                Call<InfoTravelEntity> call = null;
-                /* VERIFICAMOS I ESTA HABILITADO EL CIERRE DE VIAJES DEDE LA APP O NO*/
-
-
-                int evaluationOperator;
-                final int isTravelComany = currentTravel.isTravelComany;
-                if(isTravelComany == 1) {
-                    evaluationOperator = PARAM_3;
-                }else {
-                    evaluationOperator = PARAM_67;
-                }
-
-                if (evaluationOperator == 0) {
-                    call = this.daoTravel.finishPost(travel);
-                } else {
-                    call = this.daoTravel.preFinishMobil(travel);
-                }
-
-                Log.d("Response request", call.request().toString());
-                Log.d("Response request header", call.request().headers().toString());
-                //System.out.println(gson.toJson(travel));
-
-
-                call.enqueue(new Callback<InfoTravelEntity>() {
-                    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-                    @Override
-                    public void onResponse(Call<InfoTravelEntity> call, Response<InfoTravelEntity> response) {
-                        loading.dismiss();
-                        Log.d("Response raw header", response.headers().toString());
-                        Log.d("Response raw", String.valueOf(response.raw().body()));
-                        Log.d("Response code", String.valueOf(response.code()));
-
-
-
-                        int evaluationOperator;
-                        if(isTravelComany == 1) {
-                            evaluationOperator = PARAM_3;
-                        }else {
-                            evaluationOperator = PARAM_67;
-                        }
-
-
-                        if (evaluationOperator == 0) {
-                            Toast.makeText(HomeActivity.this, "VIAJE  FINALIZADO", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(HomeActivity.this, "VIAJE ENVIADO PARA SU APROBACION", Toast.LENGTH_SHORT).show();
-                        }
-
-
-                        btInitVisible(false);
-                        btCancelVisible(false);
-                        btPreFinishVisible(false);
-
-
-                        currentTravel = null;
-                        HomeFragment.MarkerPoints = null;
-                        if (HomeFragment.options != null) {
-                            HomeFragment.options.getPoints().clear();
-                        }
-                        gloval.setGv_travel_current(null);
-                        setInfoTravel();
-                        viewAlert = false;
-
-
-                        tiempoTxt = 0;
-                        textTiempo.setVisibility(View.INVISIBLE);
-                        extraTime = 0;
-
-
-                        final LinearLayout lg = (LinearLayout) findViewById(R.id.payment);
-                        lg.setVisibility(View.INVISIBLE);
-
-                        gloval.setGv_hour_init_travel(0);// GUARDAMOS LA HORA QUE LO INICIO
-
-                    }
-
-                    public void onFailure(Call<InfoTravelEntity> call, Throwable t) {
-                        loading.dismiss();
-                        Snackbar.make(findViewById(android.R.id.content),
-                                "ERROR (" + t.getMessage() + ")", Snackbar.LENGTH_LONG).show();
-                    }
-                });
-            }else {
-                this.getCurrentTravelByIdDriver();
+            if (this.daoTravel == null) {
+                this.daoTravel = HttpConexion.getUri().create(ServicesTravel.class);
             }
-        } finally {
-            this.daoTravel = null;
+
+            try {
+                loading = ProgressDialog.show(HomeActivity.this, "Finalizando Viaje", "Espere unos Segundos...", true, false);
+
+
+                if (currentTravel != null) {
+
+                    String lat = "";
+                    String lon = "";
+                    String add = "";
+
+                    if (HomeFragment.getmLastLocation() != null) {
+                        lat = String.valueOf(HomeFragment.getmLastLocation().getLatitude());
+                        lon = String.valueOf(HomeFragment.getmLastLocation().getLongitude());
+                        add = HomeFragment.nameLocation;
+                    }
+
+                    // BUSCAMOS EL VALOR DE EL PEAJE //
+
+                    double myDouble;
+                    String myString = peajes_txt.getText().toString();
+                    if (myString != null && !myString.equals("")) {
+                        myDouble = Double.valueOf(myString);
+                    } else {
+                        myDouble = 0;
+                    }
+                    peajes_txt.setText("");
+
+                    double parkin;
+                    String parkin_txt = ((EditText) findViewById(R.id.parkin_txt)).getText().toString();
+                    if (parkin_txt != null && !parkin_txt.equals("")) {
+                        parkin = Double.valueOf(parkin_txt);
+                    } else {
+                        parkin = 0;
+                    }
+                    ((EditText) findViewById(R.id.parkin_txt)).setText("");
+
+
+                    double _RECORIDO_TOTAL = 0;
+                    if (kilometros_total > 0) {
+                        _RECORIDO_TOTAL = Utils.round(kilometros_total, 2);
+                    }
+
+
+                    TraveInfoSendEntity travel =
+                            new TraveInfoSendEntity(new
+                                    TravelLocationEntity
+                                    (
+                                            currentTravel.getIdTravel(),
+                                            amounCalculateGps,
+                                            //Double.parseDouble(val),
+                                            _RECORIDO_TOTAL,
+                                            df.format(kilometros_total),
+                                            add,
+                                            lon,
+                                            lat,
+                                            myDouble,
+                                            parkin,
+                                            extraTime,
+                                            tiempoTxt + " Segundos",
+                                            idPaymentFormKf,
+                                            mp_jsonPaymentCard,
+                                            mp_paymentMethodId,
+                                            mp_paymentTypeId,
+                                            mp_paymentstatus,
+                                            priceFlet
+
+                                    )
+                            );
+
+
+                    GsonBuilder builder = new GsonBuilder();
+                    Gson gson = builder.create();
+
+
+                    Call<InfoTravelEntity> call = null;
+                    /* VERIFICAMOS I ESTA HABILITADO EL CIERRE DE VIAJES DEDE LA APP O NO*/
+
+
+                    int evaluationOperator;
+                    final int isTravelComany = currentTravel.isTravelComany;
+                    if (isTravelComany == 1) {
+                        evaluationOperator = PARAM_3;
+                    } else {
+                        evaluationOperator = PARAM_67;
+                    }
+
+                    if (evaluationOperator == 0) {
+                        call = this.daoTravel.finishPost(travel);
+                    } else {
+                        call = this.daoTravel.preFinishMobil(travel);
+                    }
+
+                    Log.d("Response request", call.request().toString());
+                    Log.d("Response request header", call.request().headers().toString());
+                    //System.out.println(gson.toJson(travel));
+
+
+                    call.enqueue(new Callback<InfoTravelEntity>() {
+                        @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                        @Override
+                        public void onResponse(Call<InfoTravelEntity> call, Response<InfoTravelEntity> response) {
+                            loading.dismiss();
+                            Log.d("Response raw header", response.headers().toString());
+                            Log.d("Response raw", String.valueOf(response.raw().body()));
+                            Log.d("Response code", String.valueOf(response.code()));
+
+
+                            int evaluationOperator;
+                            if (isTravelComany == 1) {
+                                evaluationOperator = PARAM_3;
+                            } else {
+                                evaluationOperator = PARAM_67;
+                            }
+
+
+                            if (evaluationOperator == 0) {
+                                Toast.makeText(HomeActivity.this, "VIAJE  FINALIZADO", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(HomeActivity.this, "VIAJE ENVIADO PARA SU APROBACION", Toast.LENGTH_SHORT).show();
+                            }
+
+
+                            btInitVisible(false);
+                            btCancelVisible(false);
+                            btPreFinishVisible(false);
+
+
+                            currentTravel = null;
+                            HomeFragment.MarkerPoints = null;
+                            if (HomeFragment.options != null) {
+                                HomeFragment.options.getPoints().clear();
+                            }
+                            gloval.setGv_travel_current(null);
+                            setInfoTravel();
+                            viewAlert = false;
+
+
+                            tiempoTxt = 0;
+                            textTiempo.setVisibility(View.INVISIBLE);
+                            extraTime = 0;
+                            editor.putInt("time_slepp", 0);
+                            editor.commit(); // commit changes
+
+
+                            final LinearLayout lg = (LinearLayout) findViewById(R.id.payment);
+                            lg.setVisibility(View.INVISIBLE);
+
+                            gloval.setGv_hour_init_travel(0);// GUARDAMOS LA HORA QUE LO INICIO
+
+                        }
+
+                        public void onFailure(Call<InfoTravelEntity> call, Throwable t) {
+                            loading.dismiss();
+                            Snackbar.make(findViewById(android.R.id.content),
+                                    "ERROR (" + t.getMessage() + ")", Snackbar.LENGTH_LONG).show();
+                        }
+                    });
+                } else {
+                    this.getCurrentTravelByIdDriver();
+                }
+            } finally {
+                this.daoTravel = null;
+            }
         }
 
     }
@@ -2478,39 +2546,40 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     // FIRMA O TARJETA //
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
 
-        switch(requestCode) {
-            case SIGNATURE_ACTIVITY:
-                if (resultCode == RESULT_OK) {
+        try {
+            switch (requestCode) {
+                case SIGNATURE_ACTIVITY:
+                    if (resultCode == RESULT_OK) {
 
-                    Bundle bundle       = data.getExtras();
-                    String status       = bundle.getString("status");
-                    path_image   = bundle.getString("image");
-                    filePath        = Uri.parse(path_image);
+                        Bundle bundle = data.getExtras();
+                        String status = bundle.getString("status");
+                        path_image = bundle.getString("image");
+                        filePath = Uri.parse(path_image);
 
-                    if(status.equalsIgnoreCase("done")){
-                        Toast.makeText(this, "Firma Guardada", Toast.LENGTH_SHORT).show();
+                        if (status.equalsIgnoreCase("done")) {
+                            Toast.makeText(this, "Firma Guardada", Toast.LENGTH_SHORT).show();
 
 
-                        try {
-                            //Getting the Bitmap from Gallery
-                            bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-                            //Setting the Bitmap to ImageView
+                            try {
+                                //Getting the Bitmap from Gallery
+                                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                                //Setting the Bitmap to ImageView
 
-                            postImageData();
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                                postImageData();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
-                }
-            case PROFILE_DRIVER_ACTIVITY:
-                super.onActivityResult(requestCode, resultCode, data);
-                break;
-            case CREDIT_CAR_ACTIVITY:
-                super.onActivityResult(requestCode, resultCode, data);
-                if(HomeActivity._PAYCREDITCAR_OK) {
-                    finishTravel();
-                }
-                break;
+                case PROFILE_DRIVER_ACTIVITY:
+                    super.onActivityResult(requestCode, resultCode, data);
+                    break;
+                case CREDIT_CAR_ACTIVITY:
+                    super.onActivityResult(requestCode, resultCode, data);
+                    if (HomeActivity._PAYCREDITCAR_OK) {
+                        finishTravel();
+                    }
+                    break;
            /* case DRAW_OVER_OTHER_APP_PERMISSION_REQUEST_CODE:
                 //Check if the permission is granted or not.
                 if (resultCode == RESULT_OK)
@@ -2523,6 +2592,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                             Toast.LENGTH_SHORT).show();*/
 
 
+            }
+        }catch (Exception e){
+            Log.d("e",e.getMessage());
         }
 
     }
@@ -2758,7 +2830,7 @@ public class SendPostRequest extends AsyncTask<String, Void, String> {
 
     }
 
-public class DowloadImg extends AsyncTask<String, Void, Bitmap> {
+    public class DowloadImg extends AsyncTask<String, Void, Bitmap> {
 
 
 

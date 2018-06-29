@@ -1613,6 +1613,7 @@ public class HomeFragment extends Fragment implements
         if (cursor.moveToFirst()) {
             //Recorremos el cursor hasta que no haya más registros
             float OLD_COLUMN_DISTANCE = 0;
+            int c = 0;
             do {
                 COLUMN_DISTANCE = cursor.getFloat(0);
 
@@ -1620,9 +1621,16 @@ public class HomeFragment extends Fragment implements
                     listPointSave.add(OLD_COLUMN_DISTANCE);
                     _DISTANCE = _DISTANCE + OLD_COLUMN_DISTANCE;
                 }
+
+                int j = cursor.getCount();
+                if(c+1 == j){
+                    listPointSave.add(COLUMN_DISTANCE);
+                    _DISTANCE = _DISTANCE + COLUMN_DISTANCE;
+                }
+
                 OLD_COLUMN_DISTANCE = COLUMN_DISTANCE;
 
-
+                c++;
             } while(cursor.moveToNext());
         }
 

@@ -100,5 +100,18 @@ public class Utils {
 
 
 
+    public static String covertSecoungToHHMMSS(int tsegundos)
+    {
+        int horas = (tsegundos / 3600);
+        int minutos = ((tsegundos-horas*3600)/60);
+        int segundos = tsegundos-(horas*3600+minutos*60);
+        String r = horas + ":" + minutos + ":" + segundos;
+        Log.d("r",r);
+        return r;
+    }
+
+
+
+
 
 }
