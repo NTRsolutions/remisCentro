@@ -27,6 +27,7 @@ import com.apreciasoft.admin.asremis.R;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.Calendar;
 
 /**
@@ -201,7 +202,8 @@ public class Signature extends AppCompatActivity {
             Canvas canvas = new Canvas(mBitmap);
             try
             {
-                FileOutputStream mFileOutStream = new FileOutputStream(mypath);
+
+               FileOutputStream mFileOutStream = new FileOutputStream(mypath);
 
                 v.draw(canvas);
                 mBitmap.compress(Bitmap.CompressFormat.PNG, 100, mFileOutStream);

@@ -55,7 +55,7 @@
                 android:textSize="20dp"
                 android:text="RECHAZAR"
                 app:layout_anchorGravity="bottom|left"
-                android:drawableLeft="@drawable/ic_close_black_24dp" />
+                android:drawableLeft="@drawable/ic_phonelink_erase_black_24dp" />
 
 
 
@@ -93,12 +93,14 @@
     <TextView
 
         android:id="@+id/textTiempo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="30sp"
+        android:layout_width="130dp"
+        android:layout_height="40dp"
+        android:textSize="20sp"
+        android:layout_marginLeft="-20dp"
+        android:paddingLeft="10dp"
         android:layout_marginTop="180dp"
-        android:background="@drawable/rounded_textview"
-        android:textColor="@android:color/white"
+        android:background="@drawable/rounded_border_textview_time"
+        android:textColor="@color/succes"
         android:gravity="center" />
 
 

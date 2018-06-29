@@ -7,7 +7,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
         import android.content.SharedPreferences;
         import android.content.pm.PackageManager;
-import android.net.Uri;
+        import android.graphics.Color;
+        import android.graphics.Typeface;
+        import android.net.Uri;
 import android.os.Bundle;
 import android.os.PowerManager;
         import android.support.design.widget.Snackbar;
@@ -51,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG = "NOTICIAS";
     public static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 1;
     protected PowerManager.WakeLock wakelock;
-    public static String version = "2.3.9";
+    public static String version = "2.0.0";
     public ProgressDialog loading;
     ServicesLoguin apiService = null;
     public  GlovalVar gloval = null;
@@ -126,9 +128,24 @@ public class MainActivity extends AppCompatActivity {
             setContentView(R.layout.activity_main);
 
             if (!verificaConexion(this)) {
-            Toast.makeText(getBaseContext(),
-                    "Comprueba tu conexión a Internet ... ", Toast.LENGTH_SHORT)
-                    .show();
+                Snackbar snackbar = Snackbar.make(
+                        findViewById(android.R.id.content),
+                        "¡Problema de conexion a Internet!",
+                        30000);
+                snackbar.setActionTextColor(Color.RED);
+                View snackbarView = snackbar.getView();
+                TextView textView = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
+                textView.setTextColor(Color.WHITE);
+                textView.setTypeface(null, Typeface.BOLD);
+
+                snackbar.setAction("Verificar", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_SETTINGS));
+                    }
+                });
+
+                snackbar.show();
             }
 
 
@@ -507,6 +524,7 @@ public class MainActivity extends AppCompatActivity {
                             editor.putString("param", gson.toJson(gloval.getGv_param()));
                             editor.putString("list_vehichle", gson.toJson(gloval.getGv_listvehicleType()));
                             editor.putString("nrDriver", gloval.getGv_nr_driver());
+                            editor.putInt("time_slepp", 0);
                             editor.commit(); // commit changes
                             /************************/
 
