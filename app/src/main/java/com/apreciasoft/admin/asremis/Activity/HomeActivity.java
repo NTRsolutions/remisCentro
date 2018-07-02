@@ -387,7 +387,7 @@ public static   File f;
             public void onClick(View v) {
                 // Perform action on click
                 idPaymentFormKf = 4;
-                finishTravel();
+                verifickTravelFinish();
             }
         });
 
@@ -2163,6 +2163,92 @@ public static   File f;
         }
     }
 
+    /* SERVICIO PARA VERIFICA SI EL VIAJE NO SE FINALIZON ANTES  */
+    public  void  verifickTravelFinish()
+    {
+
+        if( Utils.verificaConexion(this) == false) {showAlertNoConexion();}else { // VERIFICADOR DE CONEXION
+
+            if (this.daoTravel == null) {
+                this.daoTravel = HttpConexion.getUri().create(ServicesTravel.class);
+            }
+
+
+            try {
+
+                Call<Boolean> call = this.daoTravel.verifickTravelFinish(currentTravel.idTravel);
+
+                Log.d("fatal", call.request().toString());
+                Log.d("fatal", call.request().headers().toString());
+
+                call.enqueue(new Callback<Boolean>() {
+                    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                    @Override
+                    public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                        boolean result = response.body();
+                        if(result){
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+                            builder.setMessage("Viaje ya fue finalizado previamente")
+                                    .setCancelable(false)
+                                    .setPositiveButton("Continuar", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+
+                                            btInitVisible(false);
+                                            btCancelVisible(false);
+                                            btPreFinishVisible(false);
+
+
+                                            currentTravel = null;
+                                            HomeFragment.MarkerPoints = null;
+                                            if (HomeFragment.options != null) {
+                                                HomeFragment.options.getPoints().clear();
+                                            }
+                                            gloval.setGv_travel_current(null);
+                                            setInfoTravel();
+                                            viewAlert = false;
+
+
+                                            tiempoTxt = 0;
+                                            textTiempo.setVisibility(View.INVISIBLE);
+                                            extraTime = 0;
+                                            editor.putInt("time_slepp", 0);
+                                            editor.commit(); // commit changes
+
+
+                                            final LinearLayout lg = (LinearLayout) findViewById(R.id.payment);
+                                            lg.setVisibility(View.INVISIBLE);
+
+                                            gloval.setGv_hour_init_travel(0);// GUARDAMOS LA HORA QUE LO INICIO
+
+                                        }
+                                    });
+
+                            AlertDialog alert = builder.create();
+                            alert.show();
+                        }else {
+                            finishTravel();// FINALIZAMOS EL VIAJE
+                        }
+
+                    }
+
+                    public void onFailure(Call<Boolean> call, Throwable t) {
+                        Snackbar.make(findViewById(android.R.id.content),
+                                "ERROR (" + t.getMessage() + ")", Snackbar.LENGTH_LONG).show();
+                    }
+
+
+                });
+
+            } finally {
+                this.daoTravel = null;
+            }
+        }
+    }
+
+
+
+
+
     /* SERVICIO PARA INDICAR ESPERA DE UN VIAJE EN EL MONITOR DDE VIAJES */
     public  void  isWait(int value)
     {
@@ -2644,7 +2730,7 @@ public static   File f;
                 case CREDIT_CAR_ACTIVITY:
                     super.onActivityResult(requestCode, resultCode, data);
                     if (HomeActivity._PAYCREDITCAR_OK) {
-                        finishTravel();
+                        verifickTravelFinish();
                     }
                     break;
            /* case DRAW_OVER_OTHER_APP_PERMISSION_REQUEST_CODE:
@@ -2858,7 +2944,7 @@ public class SendPostRequest extends AsyncTask<String, Void, String> {
                 // Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
 
                 idPaymentFormKf = 5;
-                finishTravel();
+                verifickTravelFinish();
             }
 
             @Override
