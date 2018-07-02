@@ -1,5 +1,10 @@
 package com.apreciasoft.admin.asremis.Util;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
+import com.apreciasoft.admin.asremis.Http.HttpConexion;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -8,21 +13,26 @@ import java.util.TimerTask;
  */
 
 public class Tiempo  {
+    public SharedPreferences.Editor editor;
+    public static SharedPreferences pref;
+
 
     private Timer timer = new Timer();
-    private int segundos=0;
 
     //Clase interna que funciona como contador
     class Contador extends TimerTask {
         public void run() {
-            segundos++;
-            System.out.println("segundo: " + segundos);
+            int t = pref.getInt("time_slepp", 0);
+            System.out.println("segundo: " + t);
+            editor.putInt("time_slepp", t + 1);
+            editor.commit(); // commit changes
         }
     }
     //Crea un timer, inicia segundos a 0 y comienza a contar
-    public void Contar()
+    public void Contar(Context c)
     {
-        this.segundos=0;
+        pref = c.getSharedPreferences(HttpConexion.instance, 0); // 0 - for private mode
+        editor = pref.edit();
         timer = new Timer();
         timer.schedule(new Contador(), 0, 1000);
     }
@@ -33,6 +43,6 @@ public class Tiempo  {
     //Metodo que retorna los segundos transcurridos
     public int getSegundos()
     {
-        return this.segundos;
+        return pref.getInt("time_slepp", 0);
     }
 }

@@ -10,7 +10,8 @@ import android.content.Intent;
         import android.graphics.Color;
         import android.graphics.Typeface;
         import android.net.Uri;
-import android.os.Bundle;
+        import android.os.Build;
+        import android.os.Bundle;
 import android.os.PowerManager;
         import android.support.design.widget.Snackbar;
         import android.support.v4.app.ActivityCompat;
@@ -34,7 +35,8 @@ import com.apreciasoft.admin.asremis.Http.HttpConexion;
 import com.apreciasoft.admin.asremis.R;
 import com.apreciasoft.admin.asremis.Services.ServicesLoguin;
 import com.apreciasoft.admin.asremis.Util.GlovalVar;
-import com.google.gson.Gson;
+        import com.apreciasoft.admin.asremis.Util.MarshMallowPermission;
+        import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
         import com.google.gson.reflect.TypeToken;
         import java.util.ArrayList;
@@ -53,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG = "NOTICIAS";
     public static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 1;
     protected PowerManager.WakeLock wakelock;
-    public static String version = "2.0.3";
+    public static String version = "2.3.9";
     public ProgressDialog loading;
     ServicesLoguin apiService = null;
     public  GlovalVar gloval = null;
@@ -75,6 +77,12 @@ public class MainActivity extends AppCompatActivity {
 
 
         if( checkAndRequestPermissions() == true) {
+
+
+            //  mamelow
+           // isStoragePermissionGranted();
+
+            //
 
             if (pref.getBoolean("isLoged", false) == true) {
 

@@ -1,5 +1,6 @@
 package com.apreciasoft.admin.asremis.Util;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;

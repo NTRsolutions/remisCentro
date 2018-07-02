@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -25,8 +26,10 @@ import android.widget.Toast;
 
 import com.apreciasoft.admin.asremis.R;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Calendar;
 
@@ -193,16 +196,32 @@ public class Signature extends AppCompatActivity {
 
         public void save(View v)
         {
+            File directory = null;
+            FileOutputStream fos = null;
+
             Log.v("log_tag", "Width: " + v.getWidth());
             Log.v("log_tag", "Height: " + v.getHeight());
             if(mBitmap == null)
             {
-                mBitmap =  Bitmap.createBitmap (mContent.getWidth(), mContent.getHeight(), Bitmap.Config.RGB_565);;
+                mBitmap =  Bitmap.createBitmap (mContent.getWidth(), mContent.getHeight(), Bitmap.Config.RGB_565);
             }
-            Canvas canvas = new Canvas(mBitmap);
             try
             {
+                Canvas canvas = new Canvas(mBitmap);
+                v.draw(canvas);
 
+
+                ContextWrapper wrapper = new ContextWrapper(getApplicationContext());
+                directory = wrapper.getDir("firmas",MODE_PRIVATE);
+                File mypath=new File(directory,"asremis.jpg");
+
+                fos = new FileOutputStream(mypath);
+                mBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                path_image = directory.getAbsolutePath();
+                Log.v("log_tag", path_image);
+
+
+/*
                FileOutputStream mFileOutStream = new FileOutputStream(mypath);
 
                 v.draw(canvas);
@@ -210,8 +229,11 @@ public class Signature extends AppCompatActivity {
 
                 mFileOutStream.flush();
                 mFileOutStream.close();
+
                 path_image = MediaStore.Images.Media.insertImage(getContentResolver(), mBitmap, "title", null);
-                Log.v("log_tag","url: " + path_image);
+
+
+                Log.v("log_tag","url: " + path_image);*/
                 //In case you want to delete the file
                 //boolean deleted = mypath.delete();
                 //Log.v("log_tag","deleted: " + mypath.toString() + deleted);
@@ -222,7 +244,20 @@ public class Signature extends AppCompatActivity {
             {
                 Log.v("log_tag", e.toString());
             }
+            finally {
+                try {
+                    fos.flush();
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
         }
+
+
+
+
 
         public void clear()
         {
