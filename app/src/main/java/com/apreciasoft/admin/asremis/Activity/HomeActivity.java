@@ -3,6 +3,7 @@ package com.apreciasoft.admin.asremis.Activity;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.annotation.TargetApi;
 import android.app.FragmentManager;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
@@ -79,6 +80,7 @@ import com.apreciasoft.admin.asremis.Services.ServicesTravel;
 import com.apreciasoft.admin.asremis.Util.FloatingWidgetService;
 import com.apreciasoft.admin.asremis.Util.GlovalVar;
 import com.apreciasoft.admin.asremis.Util.RequestHandler;
+import com.apreciasoft.admin.asremis.Util.ServicesSleep;
 import com.apreciasoft.admin.asremis.Util.Signature;
 import com.apreciasoft.admin.asremis.Util.Tiempo;
 import com.apreciasoft.admin.asremis.Util.Utils;
@@ -97,6 +99,8 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -127,7 +131,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     public static final String UPLOAD_URL = HttpConexion.BASE_URL + HttpConexion.base + "/Frond/safeimg.php";
     public static final String UPLOAD_KEY = "image";
-
+public static   File f;
     public GlovalVar gloval;
 
     public ServicesTravel daoTravel = null;
@@ -193,7 +197,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private Uri filePath;
     public String path_image;
     public WsTravel ws = null;
-    public Tiempo tiempo = new Tiempo();
     public int tiempoTxt = 0;
     public int idPaymentFormKf = 0;
 
@@ -251,6 +254,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private static final int DRAW_OVER_OTHER_APP_PERMISSION_REQUEST_CODE = 1222;
 
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -488,7 +492,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        android.app.FragmentManager fr = getFragmentManager();
+        FragmentManager fr = getFragmentManager();
         fr.beginTransaction().replace(R.id.content_frame, new HomeFragment()).commit();
 
 
@@ -553,12 +557,24 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         }
 
-        textColorAnim = ObjectAnimator.ofInt(textTiempo, "textColor", Color.parseColor("#26c281"), Color.TRANSPARENT);
-        textColorAnim.setDuration(2000);
-        textColorAnim.setEvaluator(new ArgbEvaluator());
-        textColorAnim.setRepeatCount(ValueAnimator.INFINITE);
-        textColorAnim.setRepeatMode(ValueAnimator.REVERSE);
-        textColorAnim.start();
+
+        if(ServicesSleep.mRunning){
+            btnInitSplep.setText("PAUSAR");
+            textColorAnim = ObjectAnimator.ofInt(this.btnInitSplep, "textColor", Color.parseColor("#ffffff"),  Color.parseColor("#26c281"));
+            textColorAnim.setDuration(1000);
+            textColorAnim.setEvaluator(new ArgbEvaluator());
+            textColorAnim.setRepeatCount(ValueAnimator.INFINITE);
+            textColorAnim.setRepeatMode(ValueAnimator.REVERSE);
+            textColorAnim.start();
+        }else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                if (textColorAnim != null) {
+                    textColorAnim.pause();
+                }
+            }
+
+        }
+
 
 
 
@@ -1020,8 +1036,45 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void iniTimeSlep() {
-        isWait(1);
+
+
+        if(ServicesSleep.mRunning) {
+            btnPreFinish.setEnabled(true);
+            btnReturn.setEnabled(true);
+           // btnInitSplep.setBackgroundColor(getResources().getColor(R.color.CLEAR));
+
+            stopService(new Intent(this, ServicesSleep.class));
+            isWait(1);
+            tiempoTxt =  pref.getInt("time_slepp", 0);
+            textTiempo.setVisibility(View.VISIBLE);
+            textTiempo.setText(Utils.covertSecoungToHHMMSS(tiempoTxt));
+
+            Toast.makeText(getApplicationContext(), "Espera Desactivada", Toast.LENGTH_LONG).show();
+            btnInitSplep.setText("ESPERAR");
+            btnInitSplep.setTextColor(Color.parseColor("#ffffff"));
+            textColorAnim.pause();
+
+        }else {
+            btnPreFinish.setEnabled(false);
+            btnReturn.setEnabled(false);
+            startService(new Intent(this, ServicesSleep.class));
+           // btnInitSplep.setBackgroundColor(getResources().getColor(R.color.succes));
+            isWait(0);
+            Toast.makeText(getApplicationContext(), "Espera Activada", Toast.LENGTH_LONG).show();
+            btnInitSplep.setText("PAUSAR");
+            textColorAnim = ObjectAnimator.ofInt(this.btnInitSplep, "textColor", Color.parseColor("#ffffff"),  Color.parseColor("#26c281"));
+            textColorAnim.setDuration(1000);
+            textColorAnim.setEvaluator(new ArgbEvaluator());
+            textColorAnim.setRepeatCount(ValueAnimator.INFINITE);
+            textColorAnim.setRepeatMode(ValueAnimator.REVERSE);
+            textColorAnim.start();
+
+        }
+
+        /*isWait(1);
 
         loadingCronometro = new ProgressDialog(HomeActivity.this);
         loadingCronometro.setTitle("Calculando Minutos de Espera");
@@ -1033,26 +1086,26 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 stopTime();
             }
         });
-        loadingCronometro.show();
+        loadingCronometro.show();*/
 
 
-        tiempo.Contar();
-        btnPreFinish.setEnabled(false);
+        //btnPreFinish.setEnabled(false);
     }
 
     public void stopTime() {
-        loadingCronometro.dismiss();
-        tiempo.Detener();
+        stopService(new Intent(this, ServicesSleep.class));
+
+        /*loadingCronometro.dismiss();
 
 
-        tiempoTxt =  pref.getInt("time_slepp", 0) + tiempo.getSegundos();
+        tiempoTxt =  pref.getInt("time_slepp", 0) + ServicesSleep.getTimeSleep();
         btnPreFinish.setEnabled(true);
         editor.putInt("time_slepp", tiempoTxt);
         editor.commit(); // commit changes
         textTiempo.setVisibility(View.VISIBLE);
         textTiempo.setText(Utils.covertSecoungToHHMMSS(tiempoTxt));
 
-        isWait(0);
+        isWait(0);*/
 
     }
 
@@ -1118,18 +1171,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
             Log.d("BroadcastReceiver 1-", String.valueOf(gloval.getGv_travel_current_lite()));
 
-
-           /* if(gloval.getGv_travel_current_lite() == null){
-                getCurrentTravelByIdDriver();
-            }else {
-                if(gloval.getGv_travel_current_lite().getIdSatatusTravel() == 0){
-                    getCurrentTravelByIdDriver();
-                }else {
-                    controlVieTravel();
-
-                }
-            }*/
-
             getCurrentTravelByIdDriver();
 
             Log.d("BroadcastReceiver 2-", String.valueOf(ws));
@@ -1137,6 +1178,27 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         }
     };
+
+// tiempo de espera //
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            updateUI(intent);
+        }
+    };
+
+    private void updateUI(Intent intent) {
+        String counter = intent.getStringExtra("counter");
+        String time = intent.getStringExtra("time");
+        Log.d(TAG, counter);
+        Log.d(TAG, time);
+
+       // TextView txtDateTime = (TextView) findViewById(R.id.txtDateTime);
+        //TextView txtCounter = (TextView) findViewById(R.id.txtCounter);
+        //txtDateTime.setText(time);
+        //txtCounter.setText(counter);
+    }
+
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void setInfoTravel()
@@ -2562,10 +2624,15 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
                             try {
                                 //Getting the Bitmap from Gallery
-                                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                               // bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                                 //Setting the Bitmap to ImageView
 
+                                 f=new File(path_image, "asremis.jpg");
+                                bitmap = BitmapFactory.decodeStream(new FileInputStream(f));
+
                                 postImageData();
+                                f.delete();
+
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
