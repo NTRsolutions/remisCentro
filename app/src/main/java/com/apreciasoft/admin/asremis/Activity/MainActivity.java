@@ -212,38 +212,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public  boolean isStoragePermissionGranted() {
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED) {
-                Log.v(TAG,"Permission is granted");
-                return true;
-            } else {
-
-                Log.v(TAG,"Permission is revoked");
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
-                return false;
-            }
-        }
-        else { //permission is automatically granted on sdk<23 upon installation
-            Log.v(TAG,"Permission is granted");
-            return true;
-        }
-    }
-
     private  boolean checkAndRequestPermissions() {
         int camerapermission = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
         int writepermission = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         int permissionLocation = ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION);
-        int permissionRecordAudio = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+        int permissionRecordAudio = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
 
 
         List<String> listPermissionsNeeded = new ArrayList<>();
 
-        if (camerapermission != PackageManager.PERMISSION_GRANTED) {
+        /*if (camerapermission != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.CAMERA);
             Log.d("P-)","01");
-        }
+        }*/
         if (writepermission != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
             Log.d("P-)","02");
@@ -252,10 +233,10 @@ public class MainActivity extends AppCompatActivity {
             listPermissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION);
             Log.d("P-)","03");
         }
-        if (permissionRecordAudio != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+      /* if (permissionRecordAudio != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(Manifest.permission.RECORD_AUDIO);
             Log.d("P-)","04");
-        }
+        }*/
         if (!listPermissionsNeeded.isEmpty()) {
             ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), REQUEST_ID_MULTIPLE_PERMISSIONS);
             return false;
@@ -275,7 +256,7 @@ public class MainActivity extends AppCompatActivity {
                 perms.put(Manifest.permission.CAMERA, PackageManager.PERMISSION_GRANTED);
                 perms.put(Manifest.permission.WRITE_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
                 perms.put(Manifest.permission.ACCESS_FINE_LOCATION, PackageManager.PERMISSION_GRANTED);
-                perms.put(Manifest.permission.READ_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
+                perms.put(Manifest.permission.RECORD_AUDIO, PackageManager.PERMISSION_GRANTED);
                 // Fill with actual results from user
                 if (grantResults.length > 0) {
                     for (int i = 0; i < permissions.length; i++)
@@ -284,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
                     if (perms.get(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
                             && perms.get(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
                             && perms.get(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                            && perms.get(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                            && perms.get(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
                         Log.d(TAG, "sms & location services permission granted");
                         // process the normal flow
                         Intent i = new Intent(MainActivity.this, MainActivity.class);
@@ -299,7 +280,7 @@ public class MainActivity extends AppCompatActivity {
                         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)
                                 || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                                 || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                                || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                                || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
                             showDialogOK("Service Permissions are required for this app",
                                     new DialogInterface.OnClickListener() {
                                         @Override
@@ -319,21 +300,12 @@ public class MainActivity extends AppCompatActivity {
                         //permission is denied (and never ask again is  checked)
                         //shouldShowRequestPermissionRationale will return false
                         else {
-                           // explain("Necesitamos algunos permisos Para esta Aplicacion");
+                            //explain("Necesitamos algunos permisos Para esta Aplicacion");
                             //                            //proceed with logic by disabling the related features or quit the app.
-
                         }
                     }
                 }
             }
-            case 2 :{
-               // if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
-//                    Log.v(TAG,"Permission: "+permissions[0]+ "was "+grantResults[0]);
-                    //resume tasks needing this permission
-               // }
-            }
-
-
         }
 
     }
@@ -349,17 +321,11 @@ public class MainActivity extends AppCompatActivity {
     private void explain(String msg){
         final android.support.v7.app.AlertDialog.Builder dialog = new android.support.v7.app.AlertDialog.Builder(this);
         dialog.setMessage(msg)
-                .setPositiveButton("Permitir", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                        //permissionsclass.requestPermission(type,code);
-                       // Intent permisio = new Intent(MainActivity.this, MarshMallowPermission.class);
-                        //startActivity(permisio);
-                        MarshMallowPermission marshMallowPermission = new MarshMallowPermission(MainActivity.this);
-                        if(!marshMallowPermission.checkPermissionForExternalStorage()) {
-                            marshMallowPermission.requestPermissionForExternalStorage();
-                        }
-
+                        //  permissionsclass.requestPermission(type,code);
+                        startActivity(new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:com.apreciasoftdemo.parsaniahardik.marshmallowpermission")));
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
