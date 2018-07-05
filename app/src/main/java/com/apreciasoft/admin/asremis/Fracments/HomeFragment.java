@@ -858,7 +858,7 @@ public class HomeFragment extends Fragment implements
                     }
 
 
-                    if (HomeActivity.currentTravel != null) {
+                    if (HomeActivity.currentTravel != null && HomeActivity.currentTravel.getLatOrigin() != null && HomeActivity.currentTravel.getLonOrigin() != null) {
                         if (!isReadyDrawingRouting) {
                             // Initializing
                             MarkerPoints = new ArrayList<>();

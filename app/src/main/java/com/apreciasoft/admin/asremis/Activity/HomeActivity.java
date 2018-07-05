@@ -2176,68 +2176,54 @@ public static   File f;
 
             try {
 
-                Call<Boolean> call = this.daoTravel.verifickTravelFinish(currentTravel.idTravel);
+                if(currentTravel != null) {
 
-                Log.d("fatal", call.request().toString());
-                Log.d("fatal", call.request().headers().toString());
+                    Call<Boolean> call = this.daoTravel.verifickTravelFinish(currentTravel.idTravel);
 
-                call.enqueue(new Callback<Boolean>() {
-                    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-                    @Override
-                    public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-                        boolean result = response.body();
-                        if(result){
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
-                            builder.setMessage("Viaje ya fue finalizado previamente")
-                                    .setCancelable(false)
-                                    .setPositiveButton("Continuar", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
+                    Log.d("fatal", call.request().toString());
+                    Log.d("fatal", call.request().headers().toString());
 
-                                            btInitVisible(false);
-                                            btCancelVisible(false);
-                                            btPreFinishVisible(false);
-
-
-                                            currentTravel = null;
-                                            HomeFragment.MarkerPoints = null;
-                                            if (HomeFragment.options != null) {
-                                                HomeFragment.options.getPoints().clear();
+                    call.enqueue(new Callback<Boolean>() {
+                        @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                        @Override
+                        public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                            boolean result = response.body();
+                            if (result) {
+                                final android.support.v7.app.AlertDialog.Builder dialog = new android.support.v7.app.AlertDialog.Builder(HomeActivity.this);
+                                dialog.setMessage("Viaje ya fue finalizado previamente")
+                                        .setPositiveButton("Continuar", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                                                clearFinish();
                                             }
-                                            gloval.setGv_travel_current(null);
-                                            setInfoTravel();
-                                            viewAlert = false;
+                                        }) ;
+                                dialog.show();
+                            } else {
+                                finishTravel();// FINALIZAMOS EL VIAJE
+                            }
 
-
-                                            tiempoTxt = 0;
-                                            textTiempo.setVisibility(View.INVISIBLE);
-                                            extraTime = 0;
-                                            editor.putInt("time_slepp", 0);
-                                            editor.commit(); // commit changes
-
-
-                                            final LinearLayout lg = (LinearLayout) findViewById(R.id.payment);
-                                            lg.setVisibility(View.INVISIBLE);
-
-                                            gloval.setGv_hour_init_travel(0);// GUARDAMOS LA HORA QUE LO INICIO
-
-                                        }
-                                    });
-
-                            AlertDialog alert = builder.create();
-                            alert.show();
-                        }else {
-                            finishTravel();// FINALIZAMOS EL VIAJE
                         }
 
-                    }
-
-                    public void onFailure(Call<Boolean> call, Throwable t) {
-                        Snackbar.make(findViewById(android.R.id.content),
-                                "ERROR (" + t.getMessage() + ")", Snackbar.LENGTH_LONG).show();
-                    }
+                        public void onFailure(Call<Boolean> call, Throwable t) {
+                            Snackbar.make(findViewById(android.R.id.content),
+                                    "ERROR (" + t.getMessage() + ")", Snackbar.LENGTH_LONG).show();
+                        }
 
 
-                });
+                    });
+                }else {
+
+                    final android.support.v7.app.AlertDialog.Builder dialog = new android.support.v7.app.AlertDialog.Builder(this);
+                    dialog.setMessage("Viaje ya fue finalizado previamente")
+                            .setPositiveButton("Continuar", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                                    clearFinish();
+                                }
+                            }) ;
+                    dialog.show();
+
+                }
 
             } finally {
                 this.daoTravel = null;
@@ -2246,6 +2232,36 @@ public static   File f;
     }
 
 
+
+    public void clearFinish(){
+        btInitVisible(false);
+        btCancelVisible(false);
+        btPreFinishVisible(false);
+
+
+        currentTravel = null;
+        HomeFragment.MarkerPoints = null;
+        if (HomeFragment.options != null) {
+            HomeFragment.options.getPoints().clear();
+        }
+        gloval.setGv_travel_current(null);
+        setInfoTravel();
+        viewAlert = false;
+
+
+        tiempoTxt = 0;
+        textTiempo.setVisibility(View.INVISIBLE);
+        extraTime = 0;
+        editor.putInt("time_slepp", 0);
+        editor.commit(); // commit changes
+
+
+        final LinearLayout lg = (LinearLayout) findViewById(R.id.payment);
+        lg.setVisibility(View.INVISIBLE);
+
+        gloval.setGv_hour_init_travel(0);// GUARDAMOS LA HORA QUE LO INICIO
+
+    }
 
 
 
@@ -2444,10 +2460,15 @@ public static   File f;
     /*LLAMAMOS A LA PATALLA DE BOUCHE*/
     public void finishTravelVouche()
     {
-        if( Utils.verificaConexion(this) == false) {showAlertNoConexion();}else { // VERIFICADOR DE CONEXION
-            Intent intent = new Intent(getApplicationContext(), Signature.class);
-            startActivityForResult(intent, SIGNATURE_ACTIVITY);
+        if(HomeActivity.currentTravel != null){
+            if( Utils.verificaConexion(this) == false) {showAlertNoConexion();}else { // VERIFICADOR DE CONEXION
+                Intent intent = new Intent(getApplicationContext(), Signature.class);
+                startActivityForResult(intent, SIGNATURE_ACTIVITY);
+            }
+        }else {
+            clearFinish();
         }
+
     }
 
 
@@ -2910,6 +2931,7 @@ public class SendPostRequest extends AsyncTask<String, Void, String> {
 
     public void postImageData()
     {
+
         uploadImage();
     }
 
