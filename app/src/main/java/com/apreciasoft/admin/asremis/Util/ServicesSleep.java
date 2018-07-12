@@ -8,7 +8,7 @@ import android.support.annotation.Nullable;
 public class ServicesSleep extends Service {
 
     public static Tiempo tiempo = new Tiempo();
-    public static  boolean mRunning;
+    public static  boolean mRunning = false;
 
 
     @Nullable
