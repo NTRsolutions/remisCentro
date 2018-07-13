@@ -260,7 +260,7 @@ public  class InfoTravelEntity implements Serializable {
 
     @Expose
     @SerializedName("isRoundTrip")
-    public Boolean isRoundTrip;
+    public int isRoundTrip;
 
     @Expose
     @SerializedName("isTravelSendMovil")
@@ -602,12 +602,12 @@ public  class InfoTravelEntity implements Serializable {
         isTravelSendMovil = travelSendMovil;
     }
 
-    public Boolean getRoundTrip() {
+    public int getIsRoundTrip() {
         return isRoundTrip;
     }
 
-    public void setRoundTrip(Boolean roundTrip) {
-        isRoundTrip = roundTrip;
+    public void setIsRoundTrip(int isRoundTrip) {
+        this.isRoundTrip = isRoundTrip;
     }
 
     public int getIdUserDriver() {
@@ -1178,4 +1178,6 @@ public  class InfoTravelEntity implements Serializable {
     public void setIsBenefitKmClientList(int isBenefitKmClientList) {
         this.isBenefitKmClientList = isBenefitKmClientList;
     }
+
+
 }

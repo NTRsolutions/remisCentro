@@ -61,6 +61,13 @@ public class TravelLocationEntity {
     public Double distanceGps;
 
 
+
+    @Expose
+    @SerializedName("distanceGpsReturn")
+    public Double distanceGpsReturn;
+
+
+
     @Expose
     @SerializedName("distanceGpsLabel")
     public String distanceGpsLabel;
@@ -111,7 +118,7 @@ public class TravelLocationEntity {
 
 
     public TravelLocationEntity(int idUser,int idTravelKf, String location, String longLocation,
-                                String latLocation,int idDriverKf,int idVeichleAsigned,int idClientKf,double distanceSave
+                                String latLocation,int idDriverKf,int idVeichleAsigned,int idClientKf,double distanceSave,double distanceGpsReturn
 
     ) {
         this.idUser = idUser;
@@ -123,8 +130,17 @@ public class TravelLocationEntity {
         this.idVeichleAsigned = idVeichleAsigned;
         this.idClientKf = idClientKf;
         this.distanceSave = distanceSave;
+        this.distanceGpsReturn = distanceGpsReturn;
 
 
+    }
+
+    public Double getDistanceGpsReturn() {
+        return distanceGpsReturn;
+    }
+
+    public void setDistanceGpsReturn(Double distanceGpsReturn) {
+        this.distanceGpsReturn = distanceGpsReturn;
     }
 
     public Double getAmounttoll() {
@@ -188,7 +204,7 @@ public class TravelLocationEntity {
     public TravelLocationEntity(int idTravelKf, Double totalAmount, Double distanceGps, String distanceGpsLabel,
                                 String location, String longLocation, String latLocation,
                                 double amounttoll,double amountParking,double amountTiemeSlepp,String timeSleppGps,int idPaymentFormKf,
-                                String mp_jsonPaymentCard,String mp_paymentMethodId,String mp_paymentTypeId,String mp_paymentstatus,double amountFleet) {
+                                String mp_jsonPaymentCard,String mp_paymentMethodId,String mp_paymentTypeId,String mp_paymentstatus,double amountFleet,double distanceGpsReturn) {
         this.idTravelKf = idTravelKf;
         this.totalAmount = totalAmount;
         this.distanceGps = distanceGps;
@@ -211,6 +227,7 @@ public class TravelLocationEntity {
 
         this.amountFleet =amountFleet;
 
+        this.distanceGpsReturn = distanceGpsReturn;
 
 
 

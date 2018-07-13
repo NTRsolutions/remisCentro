@@ -106,7 +106,37 @@ public class Utils {
         int horas = (tsegundos / 3600);
         int minutos = ((tsegundos-horas*3600)/60);
         int segundos = tsegundos-(horas*3600+minutos*60);
-        String r = horas + ":" + minutos + ":" + segundos;
+
+
+        String _horas = "00";
+        String _minutos = "00";
+        String _segundos = "00";
+
+        if(horas<10){
+            _horas = "0"+horas;
+        }else {
+            _horas = ""+horas;
+        }
+
+        if(horas<10){
+            _horas = "0"+horas;
+        }else {
+            _horas = ""+horas;
+        }
+
+        if(minutos<10){
+            _minutos = "0"+minutos;
+        }else {
+            _minutos = ""+minutos;
+        }
+
+        if(segundos<10){
+            _segundos = "0"+segundos;
+        }else {
+            _segundos = ""+segundos;
+        }
+
+        String r = _horas + ":" + _minutos + ":" + _segundos;
         Log.d("r",r);
         return r;
     }

@@ -3,6 +3,7 @@ package com.apreciasoft.admin.asremis.Activity;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.FragmentManager;
 import android.app.NotificationManager;
@@ -145,7 +146,6 @@ public static   File f;
 
 
     public Timer timer, timerConexion;
-    public ProgressDialog loadingCronometro;
     public static final int SIGNATURE_ACTIVITY = 1;
     public static final int PROFILE_DRIVER_ACTIVITY = 2;
     public static final int CREDIT_CAR_ACTIVITY = 3;
@@ -202,12 +202,10 @@ public static   File f;
 
     public Button btnPreFinish;
     public Button btnReturn;
-    public static boolean isRoundTrip = false;
+    public static int isRoundTrip;
     double extraTime = 0;
 
     public TextView textTiempo;
-    public FloatingActionButton fab = null;
-
     public View parentLayout = null;
 
     int PARAM_3 = 0; // CIERRE DE VIAJE EMPRESA EN WEB
@@ -246,6 +244,7 @@ public static   File f;
 
     public TextView txtMount;
     public TextView distance_txt;
+    public TextView distance_return_txt;
     public TextView txtTimeslep;
     public TextView txtamounFlet;
 
@@ -254,6 +253,7 @@ public static   File f;
     private static final int DRAW_OVER_OTHER_APP_PERMISSION_REQUEST_CODE = 1222;
 
 
+    @SuppressLint("WrongViewCast")
     @TargetApi(Build.VERSION_CODES.KITKAT)
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -304,9 +304,9 @@ public static   File f;
 
         this.txtMount = findViewById(R.id.txt_mount);
         this.distance_txt = findViewById(R.id.distance_txt);
+        this.distance_return_txt = findViewById(R.id.distance_return_txt);
         this.txtTimeslep = findViewById(R.id.txtTimeslep);
         this.txtamounFlet = findViewById(R.id.amount_flet_txt);
-
         this.peajes_txt = findViewById(R.id.peajes_txt);
 
 
@@ -872,6 +872,8 @@ public static   File f;
                 Log.d("VIAJE ESTATUS ", String.valueOf(currentTravel.getIdSatatusTravel()));
 
 
+                HomeActivity.isRoundTrip = currentTravel.isRoundTrip;
+
                 // CHOFER BUSQUEDA DE CLIENTE //
                 if (currentTravel.getIdSatatusTravel() == 4) {
                     btInitVisible(true);
@@ -1298,7 +1300,7 @@ public static   File f;
 
             /* DITANCIA TOTAL RECORRIDA */
             //m_total  = HomeFragment.calculateMiles(false)[0];//BUSCAMOS LA DISTANCIA TOTLA
-            m_total  = HomeFragment.getDistanceSafe(currentTravel.getIdTravel());//BUSCAMOS LA DISTANCIA TOTLA
+            m_total  = HomeFragment.getDistanceSafe(currentTravel.getIdTravel(),-1);//BUSCAMOS LA DISTANCIA TOTLA
 
 
             Log.d("-TRAVEL totalDistance-", String.valueOf( m_total));
@@ -1306,32 +1308,27 @@ public static   File f;
             /// if(m_total > 0){
             kilometros_total = m_total;//LO CONVERTIMOS A KILOMETRO y sumamos la distancia salvada
 
-            //kilometros_total = (m_total) * 0.001;//LO CONVERTIMOS A KILOMETRO y sumamos la distancia salvada
-       /* }else {
-            kilometros_total = (currentTravel.getDistanceSave()) * 0.001;//LO CONVERTIMOS A KILOMETRO y sumamos la distancia salvada
-
-        }*/
-
-          /*  float  DistanceSave  = pref.getFloat("distanceTravel", 0);
-
-            if(DistanceSave > 0) {
-                kilometros_total = kilometros_total DistanceSave * 0.001;//LO CONVERTIMOS A KILOMETRO y sumamos la distancia salvada
-            }*/
-
-            //**************************//
 
             /* DITANCIA TOTAL VULETA */
-//            m_vuelta  = HomeFragment.calculateMiles(false)[1];//BUSCAMOS LA DISTANCIA VUELTA
-            m_vuelta  = HomeFragment.getDistanceFilter(currentTravel.getIdTravel(),1);//BUSCAMOS LA DISTANCIA VUELTA
-
+            m_vuelta  = HomeFragment.getDistanceSafe(currentTravel.getIdTravel(),1);//BUSCAMOS LA DISTANCIA VUELTA
             kilometros_vuelta = m_vuelta ;//LO CONVERTIMOS A KILOMETRO
             //**************************//
 
             /* DITANCIA TOTAL IDA */
-            km_ida = kilometros_total - kilometros_vuelta;
-            m_ida  = m_total - m_vuelta;//BUSCAMOS LA DISTANCIA IDA
+            m_ida  = HomeFragment.getDistanceSafe(currentTravel.getIdTravel(),0);//BUSCAMOS LA DISTANCIA VUELTA
             kilometros_ida = m_ida ;//LO CONVERTIMOS A KILOMETRO
             //**************************//
+
+
+            if(kilometros_vuelta > 0) {
+                if (kilometros_ida < kilometros_vuelta) {
+                    kilometros_vuelta = kilometros_vuelta - kilometros_ida;
+                } else {
+                    kilometros_vuelta = kilometros_ida - kilometros_vuelta;
+                }
+            }else {
+                kilometros_vuelta = 0;
+            }
 
 
 
@@ -1384,7 +1381,7 @@ public static   File f;
                         amounCalculateGps = this.getPriceBylistBeneficion(currentTravel.getListBeneficio(),km_ida);
 
                         // VERIFICAMOS SI HAY RETORNO //
-                        if (isRoundTrip) {
+                        if (HomeActivity.isRoundTrip == 1) {
                             amounCalculateGps = amounCalculateGps + this.getPriceReturnBylistBeneficion(currentTravel.getListBeneficio(),kilometros_ida);
                         }
 
@@ -1399,8 +1396,8 @@ public static   File f;
 
                         Log.d("-TRAVEL amounCalculateGps (3)-", String.valueOf(amounCalculateGps));
 
-                        if (isRoundTrip) {
-                            Log.d("-TRAVEL isRoundTrip -", String.valueOf(isRoundTrip));
+                        if (HomeActivity.isRoundTrip == 1) {
+                            Log.d("-TRAVEL isRoundTrip -", String.valueOf(HomeActivity.isRoundTrip));
                             amounCalculateGps = kilometros_total * currentTravel.getPriceDitanceCompany();
                             Log.d("-TRAVEL amounCalculateGps (4)-", String.valueOf(amounCalculateGps));
                             amounCalculateGps = amounCalculateGps + kilometros_vuelta * currentTravel.getPriceReturn();
@@ -1425,8 +1422,8 @@ public static   File f;
 
                     amounCalculateGps = this.getPriceBylistBeneficion(currentTravel.getListBeneficio(),kilometros_ida);
 
-                    if(isRoundTrip) {
-                        Log.d("-TRAVEL amounCalculateGps (7)-", String.valueOf(isRoundTrip));
+                    if(HomeActivity.isRoundTrip == 1) {
+                        Log.d("-TRAVEL amounCalculateGps (7)-", String.valueOf(HomeActivity.isRoundTrip));
 
                         if (currentTravel.getIsBenefitKmList() == 1) {
                             amounCalculateGps = amounCalculateGps + this.getPriceReturnBylistBeneficion(currentTravel.getListBeneficio(), kilometros_vuelta);
@@ -1442,9 +1439,9 @@ public static   File f;
 
 
                     Log.d("-TRAVEL amounCalculateGps (6)-", String.valueOf(amounCalculateGps));
-                    Log.d("-TRAVEL amounCalculateGps (7)-", String.valueOf(isRoundTrip));
+                    Log.d("-TRAVEL amounCalculateGps (7)-", String.valueOf(HomeActivity.isRoundTrip));
 
-                    if(isRoundTrip)
+                    if(HomeActivity.isRoundTrip == 1)
                     {
                         amounCalculateGps = kilometros_ida * PARAM_1;
                         Log.d("-TRAVEL amounCalculateGps (8)-", String.valueOf(amounCalculateGps));
@@ -1520,17 +1517,22 @@ public static   File f;
             }
 
             if(param25 == 1) {
-                txtTimeslep.setText(tiempoTxt + " Seg - $" + Double.toString(round(extraTime, 2)));
+                txtTimeslep.setText(Utils.covertSecoungToHHMMSS(tiempoTxt) + " - $" + Double.toString(round(extraTime, 2)));
             }else {
-                txtTimeslep.setText(tiempoTxt + " Seg");
+                txtTimeslep.setText(Utils.covertSecoungToHHMMSS(tiempoTxt));
             }
 
 
             if(param25 == 1) {
-                distance_txt.setText(df.format(kilometros_total) + " Km - $"+Double.toString(round(amounCalculateGps,2)));
+                distance_txt.setText(df.format(kilometros_ida) + " Km");
+                distance_return_txt.setText(df.format(kilometros_vuelta) + " Km");
+
+
 
             }else {
-                distance_txt.setText(df.format(kilometros_total) + " Km ");
+                distance_txt.setText(df.format(kilometros_ida) + " Km ");
+                distance_return_txt.setText(df.format(kilometros_vuelta) + " Km");
+
 
             }
 
@@ -1919,8 +1921,8 @@ public static   File f;
                                         gloval.getGv_id_driver(),
                                         gloval.getGv_id_vehichle(),
                                         idClientKf,
-                                        HomeFragment.calculateMiles(false)[0]
-
+                                        HomeFragment.calculateMiles(false)[0],
+                                        kilometros_vuelta
 
                                 )
                                 );
@@ -2142,9 +2144,9 @@ public static   File f;
                     @Override
                     public void onResponse(Call<Boolean> call, Response<Boolean> response) {
 
-                        isRoundTrip = true;
+                        HomeActivity.isRoundTrip = 1;
                         Toast.makeText(getApplicationContext(), "Vuelta Activada!", Toast.LENGTH_LONG).show();
-                        currentTravel.setRoundTrip(true);
+                        currentTravel.setIsRoundTrip(1);
                         setInfoTravel();
 
                     }
@@ -2166,6 +2168,9 @@ public static   File f;
     /* SERVICIO PARA VERIFICA SI EL VIAJE NO SE FINALIZON ANTES  */
     public  void  verifickTravelFinish()
     {
+
+        loading = ProgressDialog.show(HomeActivity.this, "Verificando Viaje", "Espere unos Segundos...", true, false);
+
 
         if( Utils.verificaConexion(this) == false) {showAlertNoConexion();}else { // VERIFICADOR DE CONEXION
 
@@ -2189,6 +2194,7 @@ public static   File f;
                         public void onResponse(Call<Boolean> call, Response<Boolean> response) {
                             boolean result = response.body();
                             if (result) {
+                                loading.cancel();
                                 final android.support.v7.app.AlertDialog.Builder dialog = new android.support.v7.app.AlertDialog.Builder(HomeActivity.this);
                                 dialog.setMessage("Viaje ya fue finalizado previamente")
                                         .setPositiveButton("Continuar", new DialogInterface.OnClickListener() {
@@ -2199,12 +2205,14 @@ public static   File f;
                                         }) ;
                                 dialog.show();
                             } else {
+                                loading.cancel();
                                 finishTravel();// FINALIZAMOS EL VIAJE
                             }
 
                         }
 
                         public void onFailure(Call<Boolean> call, Throwable t) {
+                            loading.cancel();
                             Snackbar.make(findViewById(android.R.id.content),
                                     "ERROR (" + t.getMessage() + ")", Snackbar.LENGTH_LONG).show();
                         }
@@ -2212,6 +2220,8 @@ public static   File f;
 
                     });
                 }else {
+
+                    loading.cancel();
 
                     final android.support.v7.app.AlertDialog.Builder dialog = new android.support.v7.app.AlertDialog.Builder(this);
                     dialog.setMessage("Viaje ya fue finalizado previamente")
@@ -2319,11 +2329,21 @@ public static   File f;
                     idDriver = pref.getInt("driver_id", 0);
                     gloval.setGv_id_driver(idDriver);
                 }
+
+
+
+
                 Call<InfoTravelEntity> call = this.daoTravel.getCurrentTravelByIdDriver(idDriver);
+
+                Log.d("Response request", call.request().toString());
+                Log.d("Response request header", call.request().headers().toString());
+
                 call.enqueue(new Callback<InfoTravelEntity>() {
                     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
                     @Override
                     public void onResponse(Call<InfoTravelEntity> call, Response<InfoTravelEntity> response) {
+
+
 
                         InfoTravelEntity TRAVEL = (InfoTravelEntity) response.body();
 
@@ -2597,13 +2617,14 @@ public static   File f;
                                             myDouble,
                                             parkin,
                                             extraTime,
-                                            tiempoTxt + " Segundos",
+                                            Utils.covertSecoungToHHMMSS(tiempoTxt),
                                             idPaymentFormKf,
                                             mp_jsonPaymentCard,
                                             mp_paymentMethodId,
                                             mp_paymentTypeId,
                                             mp_paymentstatus,
-                                            priceFlet
+                                            priceFlet,
+                                            Utils.round(kilometros_vuelta,2)
 
                                     )
                             );
@@ -2697,6 +2718,7 @@ public static   File f;
                         }
                     });
                 } else {
+                    loading.dismiss();
                     this.getCurrentTravelByIdDriver();
                 }
             } finally {

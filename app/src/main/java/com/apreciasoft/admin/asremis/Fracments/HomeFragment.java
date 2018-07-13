@@ -127,7 +127,6 @@ public class HomeFragment extends Fragment implements
     /* SOCKET MAPA */
     public static Socket SPCKETMAP;
     public static String URL_SOCKET_MAP =  HttpConexion.PROTOCOL+"://"+HttpConexion.ip+":"+HttpConexion.portWsWeb+"";
-    public static String MY_EVENT_MAP = "init";
     public static SqliteUtil AsRemisSqlite;
 
     /*++++++++++++*/
@@ -952,18 +951,20 @@ public class HomeFragment extends Fragment implements
                             for (int z = 0; z < HomeFragment.listPosition.size(); z++) {
                                 LatLng point = HomeFragment.listPosition.get(z);
 
-                                if (HomeActivity.isRoundTrip && optionReturnActive == null)//VERIFICAMOS SI ESTA ACTIVA LA VUETA PARA SABER DESDE QUE UBUCACION SE REALIZO
-                                {
-                                    optionReturnActive = new
-                                            PolylineOptions()
-                                            .width(5)
-                                            .color(Color.TRANSPARENT)
-                                            .geodesic(true);
-                                    optionReturnActive.add(point);
+                                    if (HomeActivity.currentTravel.isRoundTrip == 1 && optionReturnActive == null)//VERIFICAMOS SI ESTA ACTIVA LA VUETA PARA SABER DESDE QUE UBUCACION SE REALIZO
+                                    {
+                                        optionReturnActive = new
+                                                PolylineOptions()
+                                                .width(5)
+                                                .color(Color.TRANSPARENT)
+                                                .geodesic(true);
+                                        optionReturnActive.add(point);
 
-                                }else {
-                                    HomeFragment.options.add(point);
-                                }
+
+                                    }else {
+                                        HomeFragment.options.add(point);
+                                    }
+
 
 
                             }
@@ -977,8 +978,8 @@ public class HomeFragment extends Fragment implements
                         }
 
 
-
-                        double DISTANCE = Utils.round(HomeFragment.calculateMiles(true)[0]* 0.001,2);
+                        float[] _RECORD =  HomeFragment.calculateMiles(true);
+                        double DISTANCE = Utils.round((_RECORD[0]+_RECORD[1])* 0.001,2);
 
                         /*
                         * GUARDAMOS LA DITANCIA DEL RECORRIDO EN EL SQLITE LOCAL
@@ -1121,14 +1122,17 @@ public class HomeFragment extends Fragment implements
                 totalDistance += lastLocation.distanceTo(currLocation);
 
                 // VERIFICAMOS SI ACTIVO EL RETORNO PARA LA IDA Y VUELTA //
-                if(HomeActivity.isRoundTrip) {
-                    if (optionReturnActive.getPoints().get(0) != null)
-                    {
-                        if (optionReturnActive.getPoints().get(0).latitude == HomeFragment.options.getPoints().get(i).latitude) {
-                            if (optionReturnActive.getPoints().get(0).longitude == HomeFragment.options.getPoints().get(i).longitude) {
-                                Log.d("totalDistance 2", "retorno");
+                if(HomeActivity.currentTravel != null){
 
-                                totalDistanceVuelta += lastLocation.distanceTo(currLocation);
+                        if (HomeActivity.currentTravel.isRoundTrip == 1) {
+                            if (optionReturnActive.getPoints().get(0) != null) {
+                                if (optionReturnActive.getPoints().get(0).latitude == HomeFragment.options.getPoints().get(i).latitude) {
+                                    if (optionReturnActive.getPoints().get(0).longitude == HomeFragment.options.getPoints().get(i).longitude) {
+                                        Log.d("totalDistance 2", "retorno");
+
+                                        totalDistanceVuelta += lastLocation.distanceTo(currLocation);
+                                    }
+
                             }
                         }
                     }
@@ -1137,47 +1141,6 @@ public class HomeFragment extends Fragment implements
             }
 
         }
-
-
-        /* salvar conexion */
-       // double DISTANCE = Utils.round(HomeFragment.calculateMiles(true)[0]* 0.001,2);
-
-      //  float newDistanceSave = 0;
-      //  float DistanceSave =  (float) Utils.round(pref.getFloat("distanceTravel", 0),2);
-
-      //  Log.d("DistanceSave ", String.valueOf(totalDistance));
-       // Log.d("DistanceSave *", String.valueOf(DistanceSave));
-
-        /*if (totalDistance < DistanceSave) {
-            newDistanceSave = (float)(totalDistance + DistanceSave);
-
-            infoGneral.setVisibility(View.VISIBLE);
-            infoGneral.setText("Distancia guardada  ("+DistanceSave+")Km ");
-
-        }else {
-            infoGneral.setVisibility(View.INVISIBLE);
-
-        }
-
-        if (totalDistance > DistanceSave) {
-            newDistanceSave =  (float)Utils.round(DistanceSave,2) + (float) Utils.round(totalDistance -  DistanceSave,2);
-        }*/
-
-       /* if(DistanceSave > 0) {
-            infodistance.setVisibility(View.VISIBLE);
-            infodistance.setText("Distancia guardada  (" + DistanceSave + ")Km ");
-        }
-
-
-        if ((float)Utils.round(totalDistance* 0.001,2) > DistanceSave) {
-            newDistanceSave = (float)Utils.round(totalDistance* 0.001,2);
-        }
-
-        editor.putFloat("distanceTravel",  newDistanceSave);
-        editor.commit();*/
-
-
-       // totalDistance = getDistanceSafe(HomeActivity.currentTravel.getIdTravel());
 
 
         return  new float[]{totalDistance, totalDistanceVuelta};
@@ -1271,14 +1234,14 @@ public class HomeFragment extends Fragment implements
 
 
 
-        if(currentTravel.getRoundTrip() != null) {
-            if(currentTravel.getRoundTrip()) {
-                if (currentTravel.getRoundTrip()) {
+
+            if(currentTravel != null) {
+                if (currentTravel.getIsRoundTrip() == 1) {
                     infoGneral.setText("Vuelta Activada!");
 
                 }
             }
-        }
+
 
         getPick(currentTravel.getIdUserClient());
 
@@ -1403,34 +1366,39 @@ public class HomeFragment extends Fragment implements
 
     private static class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
 
-        // Parsing the data in non-ui thread
-        @Override
-        protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
+       //
+            // Parsing the data in non-ui thread
+            @Override
+            protected List<List<HashMap<String, String>>> doInBackground (String...jsonData){
 
             JSONObject jObject;
             List<List<HashMap<String, String>>> routes = null;
 
             try {
                 jObject = new JSONObject(jsonData[0]);
-                Log.d("ParserTask",jsonData[0].toString());
+                Log.d("ParserTask", jsonData[0].toString());
                 DataParser parser = new DataParser();
                 Log.d("ParserTask", parser.toString());
 
                 // Starts parsing data
                 routes = parser.parse(jObject);
-                Log.d("ParserTask","Executing routes");
-                Log.d("ParserTask",routes.toString());
+                Log.d("ParserTask", "Executing routes");
+                Log.d("ParserTask", routes.toString());
 
             } catch (Exception e) {
-                Log.d("ParserTask",e.toString());
+                Log.d("ParserTask", e.toString());
                 e.printStackTrace();
             }
             return routes;
         }
 
-        // Executes in UI thread, after the parsing process
-        @Override
-        protected void onPostExecute(List<List<HashMap<String, String>>> result) {
+
+
+            // Executes in UI thread, after the parsing process
+            @Override
+            protected void onPostExecute (List < List < HashMap < String, String >>> result){
+
+           try{
             ArrayList<LatLng> points;
             PolylineOptions lineOptions = null;
 
@@ -1456,20 +1424,23 @@ public class HomeFragment extends Fragment implements
                 // Adding all the points in the route to LineOptions
                 lineOptions.addAll(points);
                 lineOptions.width(10);
-                lineOptions.color( Color.parseColor( "#5990e9" ) );
-
+                lineOptions.color(Color.parseColor("#5990e9"));
 
 
             }
 
             // Drawing polyline in the Google Map for the i-th route
-            if(lineOptions != null) {
+            if (lineOptions != null) {
                 mGoogleMap.addPolyline(lineOptions);
+            } else {
+                Log.d("onPostExecute", "without Polylines drawn");
             }
-            else {
-                Log.d("onPostExecute","without Polylines drawn");
-            }
+
+           }catch(Exception ex){
+               ex.getMessage();
+           }
         }
+
     }
 
 
@@ -1552,6 +1523,7 @@ public class HomeFragment extends Fragment implements
         SQLiteDatabase sqlite = AsRemisSqlite.getWritableDatabase();
 
 
+
                 if(distance > 0) {
                     //Clase que permite llamar a los métodos para crear, eliminar, leer y actualizar registros. Se establecen permisos de escritura.
                     sqlite = AsRemisSqlite.getWritableDatabase();
@@ -1560,7 +1532,7 @@ public class HomeFragment extends Fragment implements
                     //Se añaden los valores introducidos de cada campo mediante clave(columna)/valor(valor introducido en el campo de texto)
                     content.put(TravelSqliteEntity.COLUMN_ID, idTravel);
                     content.put(TravelSqliteEntity.COLUMN_DISTANCE, distance);
-                    content.put(TravelSqliteEntity.IS_DRETURN, HomeActivity.isRoundTrip);
+                    content.put(TravelSqliteEntity.IS_DRETURN, HomeActivity.currentTravel.isRoundTrip);
                     sqlite.insert(TravelSqliteEntity.TABLE_NAME, null, content);
                 }
 
@@ -1588,7 +1560,7 @@ public class HomeFragment extends Fragment implements
             sqlite.close();
     }
 
-    public static Float  getDistanceSafe(int idTravel){
+    public static Float  getDistanceSafe(int idTravel,int isReturn){
 
         AsRemisSqlite = new SqliteUtil(view.getContext());
 
@@ -1597,7 +1569,18 @@ public class HomeFragment extends Fragment implements
 
 
         //Cláusula WHERE para buscar por producto
-        String WHERE =  TravelSqliteEntity.COLUMN_ID + " = '" + idTravel + "'";
+
+
+        String WHERE = "";
+
+        if(isReturn == 1 || isReturn == 0){
+            WHERE = TravelSqliteEntity.COLUMN_ID + " = '" + idTravel + "' AND "+TravelSqliteEntity.IS_DRETURN+" = "+isReturn+" ";
+
+
+        }else {
+            WHERE = TravelSqliteEntity.COLUMN_ID + " = '" + idTravel + "'";
+
+        }
 
 
         String[] columnas = {
@@ -1617,15 +1600,17 @@ public class HomeFragment extends Fragment implements
             do {
                 COLUMN_DISTANCE = cursor.getFloat(0);
 
-                if(OLD_COLUMN_DISTANCE > COLUMN_DISTANCE){
-                    listPointSave.add(OLD_COLUMN_DISTANCE);
-                    _DISTANCE = _DISTANCE + OLD_COLUMN_DISTANCE;
-                }
+                if(COLUMN_DISTANCE != OLD_COLUMN_DISTANCE) {
+                    if (OLD_COLUMN_DISTANCE > COLUMN_DISTANCE) {
+                        listPointSave.add(OLD_COLUMN_DISTANCE);
+                        _DISTANCE = _DISTANCE + OLD_COLUMN_DISTANCE;
+                    }
 
-                int j = cursor.getCount();
-                if(c+1 == j){
-                    listPointSave.add(COLUMN_DISTANCE);
-                    _DISTANCE = _DISTANCE + COLUMN_DISTANCE;
+                    int j = cursor.getCount();
+                    if (c + 1 == j) {
+                        listPointSave.add(COLUMN_DISTANCE);
+                        _DISTANCE = _DISTANCE + COLUMN_DISTANCE;
+                    }
                 }
 
                 OLD_COLUMN_DISTANCE = COLUMN_DISTANCE;
@@ -1645,13 +1630,13 @@ public class HomeFragment extends Fragment implements
         return _DISTANCE;
     }
 
-    public static Float  getDistanceFilter(int idTravel,int isReturn){
+    public static Float  getDistanceFilter_(int idTravel,int isReturn){
 
         AsRemisSqlite = new SqliteUtil(view.getContext());
 
-        float COLUMN_DISTANCE = 0,_DISTANCE = 0;
+        float  _DISTANCE = 0;
 
-        //Cláusula WHERE para buscar por producto
+        //Cláusula WHERE para buscar
         String WHERE =  TravelSqliteEntity.COLUMN_ID + " = '" + idTravel + "' AND "+TravelSqliteEntity.IS_DRETURN+" = "+isReturn+" LIMIT 1";
 
 
