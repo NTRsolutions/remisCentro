@@ -165,6 +165,7 @@ public static   File f;
     public double km_ida = 0.001;
     public double m_ida = 0;
     public double kilometros_ida = m_vuelta * km_vuelta;
+    public double  bandera = 0;
 
 
     /*
@@ -1576,7 +1577,7 @@ public static   File f;
 
 
 
-            double bandera = 0;
+
             if(param78 > 0) {
                 if(currentTravel.getIsTravelComany() == 1){// EMPRESA
                     if(param78 == 1){
@@ -2607,7 +2608,7 @@ public static   File f;
                                     TravelLocationEntity
                                     (
                                             currentTravel.getIdTravel(),
-                                            amounCalculateGps,
+                                            amounCalculateGps+bandera,
                                             //Double.parseDouble(val),
                                             _RECORIDO_TOTAL,
                                             df.format(kilometros_total),

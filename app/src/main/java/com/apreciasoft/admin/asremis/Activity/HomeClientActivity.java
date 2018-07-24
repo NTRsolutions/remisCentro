@@ -1737,7 +1737,9 @@ public class HomeClientActivity extends AppCompatActivity
                                     }
                                 });
                         alertDialog.setCancelable(false);
-                        alertDialog.show();
+                        if(alertDialog != null) {
+                            alertDialog.show();
+                        }
 
 
 
@@ -2448,8 +2450,10 @@ public class HomeClientActivity extends AppCompatActivity
                             }
                         });
 
-        popDialog.create();
-        popDialog.show();
+        if(popDialog != null) {
+            popDialog.create();
+            popDialog.show();
+        }
 
     }
 
@@ -2480,6 +2484,7 @@ public class HomeClientActivity extends AppCompatActivity
                         materialDesignFAM.setVisibility(View.VISIBLE);
                         gloval.setGv_travel_current(null);
                         HomeClientFragment.clearInfo();
+                       // HomeClientFragment.timerblink.cancel();
 
                     }
 

@@ -275,22 +275,28 @@ public class HomeClientFragment extends Fragment implements  OnMapReadyCallback,
 
 
     public static void clearInfo() {
-        HomeClientFragment.txt_client_info.setText("No se cargo informacion");
-        HomeClientFragment.txt_calling_info.setText("No se cargo informacion");
-        HomeClientFragment.txt_domain.setText("No se cargo informacion");
-        HomeClientFragment.txt_destination_info.setText("No se cargo informacion");
-        HomeClientFragment.txt_origin_info.setText("No se cargo informacion");
-        HomeClientFragment.txt_km_info.setText("0.0Km");
-        HomeClientFragment.txt_amount_info.setText("0.0$");
-        HomeClientFragment.txt_date_info.setText("--/--/----");
-        getPick(-1);
-
-        HomeClientFragment.txtStatus.setVisibility(View.INVISIBLE);
-        btnCnacel.setVisibility(View.INVISIBLE);
-
-        setVisibleprogressTravel(false);
+       try{
 
 
+
+           HomeClientFragment.txt_client_info.setText("No se cargo informacion");
+            HomeClientFragment.txt_calling_info.setText("No se cargo informacion");
+            HomeClientFragment.txt_domain.setText("No se cargo informacion");
+            HomeClientFragment.txt_destination_info.setText("No se cargo informacion");
+            HomeClientFragment.txt_origin_info.setText("No se cargo informacion");
+            HomeClientFragment.txt_km_info.setText("0.0Km");
+            HomeClientFragment.txt_amount_info.setText("0.0$");
+            HomeClientFragment.txt_date_info.setText("--/--/----");
+            getPick(-1);
+
+            HomeClientFragment.txtStatus.setVisibility(View.INVISIBLE);
+            btnCnacel.setVisibility(View.INVISIBLE);
+
+            setVisibleprogressTravel(false);
+
+        }catch (Exception E){
+           Log.d("ERRO",E.getMessage());
+       }
 
     }
 
@@ -320,8 +326,9 @@ public class HomeClientFragment extends Fragment implements  OnMapReadyCallback,
                 HomeClientFragment.txtStatus.setText(currentTravel.getNameStatusTravel());
 
 
-
-                getPick(currentTravel.getIdUserDriver());// PASAMOS EL ID DE EL USUARIO DE EL CHOFER
+                if (currentTravel.getIdSatatusTravel() == 4 || currentTravel.getIdSatatusTravel() == 5 ) {
+                    getPick(currentTravel.getIdUserDriver());// PASAMOS EL ID DE EL USUARIO DE EL CHOFER
+                }
 
                 HomeClientFragment.txtStatus.setTextColor(Color.parseColor(currentTravel.getClassColorTwo()));
 
@@ -392,8 +399,9 @@ public class HomeClientFragment extends Fragment implements  OnMapReadyCallback,
     // METODO OBTENER FOTO DE CHOFER //
     public static void getPick(int idUserDriver)
     {
-        HomeClientFragment.DowloadImg dwImg = new HomeClientFragment.DowloadImg();
-        dwImg.execute(HttpConexion.BASE_URL+HttpConexion.base+"/Frond/img_users/"+idUserDriver);
+           // HomeClientFragment.DowloadImg dwImg = new HomeClientFragment.DowloadImg();
+            //dwImg.execute(HttpConexion.BASE_URL + HttpConexion.base + "/Frond/img_users/" + idUserDriver);
+
 
     }
 
@@ -411,6 +419,7 @@ public class HomeClientFragment extends Fragment implements  OnMapReadyCallback,
         @Override
         protected Bitmap doInBackground(String... params) {
             // TODO Auto-generated method stub
+
             Log.i("doInBackground" , "Entra en doInBackground");
             String url = params[0]+".JPEG";
             Bitmap imagen = descargarImagen(url);
