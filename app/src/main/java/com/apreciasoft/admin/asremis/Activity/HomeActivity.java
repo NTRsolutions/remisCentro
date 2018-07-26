@@ -1379,11 +1379,11 @@ public static   File f;
 
 
                         /* VERIFICAMOS SI ESTA DENTRO DE EL RANGO DE EL BENEFICIO ESTABLECIDO */
-                        amounCalculateGps = this.getPriceBylistBeneficion(currentTravel.getListBeneficio(),km_ida);
+                        amounCalculateGps = this.getPriceBylistBeneficion(currentTravel.getListBeneficio(),kilometros_ida);
 
                         // VERIFICAMOS SI HAY RETORNO //
                         if (HomeActivity.isRoundTrip == 1) {
-                            amounCalculateGps = amounCalculateGps + this.getPriceReturnBylistBeneficion(currentTravel.getListBeneficio(),kilometros_ida);
+                            amounCalculateGps = amounCalculateGps + this.getPriceReturnBylistBeneficion(currentTravel.getListBeneficio(),kilometros_vuelta);
                         }
 
                         if(amounCalculateGps <1){
@@ -1399,7 +1399,7 @@ public static   File f;
 
                         if (HomeActivity.isRoundTrip == 1) {
                             Log.d("-TRAVEL isRoundTrip -", String.valueOf(HomeActivity.isRoundTrip));
-                            amounCalculateGps = kilometros_total * currentTravel.getPriceDitanceCompany();
+                            amounCalculateGps = kilometros_ida * currentTravel.getPriceDitanceCompany();
                             Log.d("-TRAVEL amounCalculateGps (4)-", String.valueOf(amounCalculateGps));
                             amounCalculateGps = amounCalculateGps + kilometros_vuelta * currentTravel.getPriceReturn();
                             Log.d("-TRAVEL amounCalculateGps (5)-", String.valueOf(amounCalculateGps));
@@ -3112,7 +3112,7 @@ public class SendPostRequest extends AsyncTask<String, Void, String> {
         }
 
         // VALIDAMOS SI EL TOTAL KM ES MAYOR A //
-        if(distance > Double.parseDouble(list.get(indexBrack-1).getBenefitsFromKm())){
+        if(distance > Double.parseDouble(list.get(indexBrack-1).getBenefitsToKm())){
             double distanceExtraBeneficio = distance - Double.parseDouble(list.get(indexBrack-1).getBenefitsToKm());
 
 

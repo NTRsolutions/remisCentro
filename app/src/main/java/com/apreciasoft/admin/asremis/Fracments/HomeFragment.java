@@ -831,6 +831,9 @@ public class HomeFragment extends Fragment implements
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
 
