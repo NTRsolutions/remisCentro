@@ -1317,15 +1317,15 @@ public static   File f;
 
             /* DITANCIA TOTAL IDA */
             m_ida  = HomeFragment.getDistanceSafe(currentTravel.getIdTravel(),0);//BUSCAMOS LA DISTANCIA VUELTA
-            kilometros_ida = m_ida ;//LO CONVERTIMOS A KILOMETRO
+            kilometros_ida = Utils.roundTwoDecimals(m_ida) ;//LO CONVERTIMOS A KILOMETRO
             //**************************//
 
 
             if(kilometros_vuelta > 0) {
                 if (kilometros_ida < kilometros_vuelta) {
-                    kilometros_vuelta = kilometros_vuelta - kilometros_ida;
+                    kilometros_vuelta = Utils.roundTwoDecimals(kilometros_vuelta - kilometros_ida);
                 } else {
-                    kilometros_vuelta = kilometros_ida - kilometros_vuelta;
+                    kilometros_vuelta = Utils.roundTwoDecimals(kilometros_ida - kilometros_vuelta);
                 }
             }else {
                 kilometros_vuelta = 0;
@@ -1426,9 +1426,9 @@ public static   File f;
                     if(HomeActivity.isRoundTrip == 1) {
                         Log.d("-TRAVEL amounCalculateGps (7)-", String.valueOf(HomeActivity.isRoundTrip));
 
-                        if (currentTravel.getIsBenefitKmList() == 1) {
+                        //if (currentTravel.getIsBenefitKmList() == 1) {
                             amounCalculateGps = amounCalculateGps + this.getPriceReturnBylistBeneficion(currentTravel.getListBeneficio(), kilometros_vuelta);
-                        }
+                        //}
                     }
 
                     if(amounCalculateGps <1){

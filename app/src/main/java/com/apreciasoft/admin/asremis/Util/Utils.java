@@ -99,6 +99,11 @@ public class Utils {
         return (double) tmp / factor;
     }
 
+    public static double roundTwoDecimals(double d)
+    {
+        DecimalFormat twoDForm = new DecimalFormat("#.##");
+        return Double.valueOf(twoDForm.format(d));
+    }
 
 
     public static String covertSecoungToHHMMSS(int tsegundos)
