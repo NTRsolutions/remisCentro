@@ -397,7 +397,7 @@ public static   File f;
         btnInit.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
-                initTravel();
+                verifickTravelCancelInit();
             }
         });
 
@@ -2208,6 +2208,159 @@ public static   File f;
                             } else {
                                 loading.cancel();
                                 finishTravel();// FINALIZAMOS EL VIAJE
+                            }
+
+                        }
+
+                        public void onFailure(Call<Boolean> call, Throwable t) {
+                            loading.cancel();
+                            Snackbar.make(findViewById(android.R.id.content),
+                                    "ERROR (" + t.getMessage() + ")", Snackbar.LENGTH_LONG).show();
+                        }
+
+
+                    });
+                }else {
+
+                    loading.cancel();
+
+                    final android.support.v7.app.AlertDialog.Builder dialog = new android.support.v7.app.AlertDialog.Builder(this);
+                    dialog.setMessage("Viaje ya fue finalizado previamente")
+                            .setPositiveButton("Continuar", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                                    clearFinish();
+                                }
+                            }) ;
+                    dialog.show();
+
+                }
+
+            } finally {
+                this.daoTravel = null;
+            }
+        }
+    }
+
+    /* SERVICIO PARA VERIFICA SI EL VIAJE NO SE CANCELO ANTES  */
+    public  void  verifickTravelCancel(final int idTravel)
+    {
+
+        loading = ProgressDialog.show(HomeActivity.this, "Verificando Viaje", "Espere unos Segundos...", true, false);
+
+
+        if( Utils.verificaConexion(this) == false) {showAlertNoConexion();}else { // VERIFICADOR DE CONEXION
+
+            if (this.daoTravel == null) {
+                this.daoTravel = HttpConexion.getUri().create(ServicesTravel.class);
+            }
+
+
+            try {
+
+                if(currentTravel != null) {
+
+                    Call<Boolean> call = this.daoTravel.verifickTravelCancel(idTravel);
+
+                    Log.d("fatal", call.request().toString());
+                    Log.d("fatal", call.request().headers().toString());
+
+                    call.enqueue(new Callback<Boolean>() {
+                        @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                        @Override
+                        public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                            boolean result = response.body();
+                            if (result) {
+                                loading.cancel();
+                                final android.support.v7.app.AlertDialog.Builder dialog = new android.support.v7.app.AlertDialog.Builder(HomeActivity.this);
+                                dialog.setMessage("Viaje fue Cancelado previamente")
+                                        .setPositiveButton("Continuar", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                                                fn_refhesh();
+                                            }
+                                        }) ;
+                                dialog.show();
+                            } else {
+                                loading.cancel();
+                                aceptTravel(idTravel);// ACEPTAMOS EL VIAJE
+                            }
+
+                        }
+
+                        public void onFailure(Call<Boolean> call, Throwable t) {
+                            loading.cancel();
+                            Snackbar.make(findViewById(android.R.id.content),
+                                    "ERROR (" + t.getMessage() + ")", Snackbar.LENGTH_LONG).show();
+                        }
+
+
+                    });
+                }else {
+
+                    loading.cancel();
+
+                    final android.support.v7.app.AlertDialog.Builder dialog = new android.support.v7.app.AlertDialog.Builder(this);
+                    dialog.setMessage("Viaje ya fue finalizado previamente")
+                            .setPositiveButton("Continuar", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                                    clearFinish();
+                                }
+                            }) ;
+                    dialog.show();
+
+                }
+
+            } finally {
+                this.daoTravel = null;
+            }
+        }
+    }
+
+
+    /* SERVICIO PARA VERIFICA SI EL VIAJE NO SE CANCELO ANTES para poder iniciar  */
+    public  void  verifickTravelCancelInit()
+    {
+
+        loading = ProgressDialog.show(HomeActivity.this, "Verificando Viaje", "Espere unos Segundos...", true, false);
+
+
+        if( Utils.verificaConexion(this) == false) {showAlertNoConexion();}else { // VERIFICADOR DE CONEXION
+
+            if (this.daoTravel == null) {
+                this.daoTravel = HttpConexion.getUri().create(ServicesTravel.class);
+            }
+
+
+            try {
+
+                if(currentTravel != null) {
+
+                    Call<Boolean> call = this.daoTravel.verifickTravelCancel(currentTravel.idTravel);
+
+                    Log.d("fatal", call.request().toString());
+                    Log.d("fatal", call.request().headers().toString());
+
+                    call.enqueue(new Callback<Boolean>() {
+                        @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                        @Override
+                        public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                            boolean result = response.body();
+                            if (result) {
+                                loading.cancel();
+                                final android.support.v7.app.AlertDialog.Builder dialog = new android.support.v7.app.AlertDialog.Builder(HomeActivity.this);
+                                dialog.setMessage("Viaje fue Cancelado previamente")
+                                        .setPositiveButton("Continuar", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                                                fn_refhesh();
+                                            }
+                                        }) ;
+                                dialog.show();
+                            } else {
+                                loading.cancel();
+                                initTravel();// INICIAMOS EL VIAJE
                             }
 
                         }

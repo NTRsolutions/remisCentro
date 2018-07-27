@@ -67,6 +67,12 @@ public interface ServicesTravel {
     @GET("travel/verifickTravelFinish/{id}")
     Call<Boolean> verifickTravelFinish(@Path("id")  int id);
 
+    @Headers("Content-Type: application/json")
+    @GET("travel/verifickTravelCancel/{id}")
+    Call<Boolean> verifickTravelCancel(@Path("id")  int id);
+
+
+
 
     @Headers("Content-Type: application/json")
     @GET("travel/isWait/{id}/{value}")

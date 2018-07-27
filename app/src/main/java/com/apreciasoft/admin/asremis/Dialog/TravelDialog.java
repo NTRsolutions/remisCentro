@@ -137,7 +137,7 @@ public class TravelDialog extends DialogFragment {
         btnAcep.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // ACEPTAR VIAJE
-                ((HomeActivity)getActivity()).aceptTravel(currentTravel.getIdTravel());
+                ((HomeActivity)getActivity()).verifickTravelCancel(currentTravel.getIdTravel());
             }
         });
 
