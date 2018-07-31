@@ -611,17 +611,20 @@ public static   File f;
 
 
     private void setParamLocal() {
+        try {
         param25 = Integer.parseInt(gloval.getGv_param().get(25).getValue());// SE PUEDE VER PRECIO EN VIAJE EN APP
         PARAM_66 = Integer.parseInt(gloval.getGv_param().get(65).getValue());// SE PUEDE VER PRECIO EN VIAJE EN APP
         PARAM_68 = Integer.parseInt(gloval.getGv_param().get(67).getValue());// SE PAGAR CON TARJETA
 
-        try {
+
             PARAM_69 = gloval.getGv_param().get(68).getValue();//
             PARAM_79 = gloval.getGv_param().get(78).getValue();//
 
         } catch (IndexOutOfBoundsException e) {
             PARAM_69 = "";
             PARAM_79 = "";
+        } catch (Exception e){
+            Log.d("error",e.getMessage());
         }
         PARAM_3 = Integer.parseInt(gloval.getGv_param().get(2).getValue());
         PARAM_39 = Integer.parseInt(gloval.getGv_param().get(38).getValue());
@@ -1317,15 +1320,15 @@ public static   File f;
 
             /* DITANCIA TOTAL IDA */
             m_ida  = HomeFragment.getDistanceSafe(currentTravel.getIdTravel(),0);//BUSCAMOS LA DISTANCIA VUELTA
-            kilometros_ida = Utils.roundTwoDecimals(m_ida) ;//LO CONVERTIMOS A KILOMETRO
+            kilometros_ida = Utils.round(m_ida,2) ;//LO CONVERTIMOS A KILOMETRO
             //**************************//
 
 
             if(kilometros_vuelta > 0) {
                 if (kilometros_ida < kilometros_vuelta) {
-                    kilometros_vuelta = Utils.roundTwoDecimals(kilometros_vuelta - kilometros_ida);
+                    kilometros_vuelta = Utils.round(kilometros_vuelta - kilometros_ida,2);
                 } else {
-                    kilometros_vuelta = Utils.roundTwoDecimals(kilometros_ida - kilometros_vuelta);
+                    kilometros_vuelta = Utils.round(kilometros_ida - kilometros_vuelta,2);
                 }
             }else {
                 kilometros_vuelta = 0;
