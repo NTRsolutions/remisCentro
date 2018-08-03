@@ -10,6 +10,25 @@ import com.google.gson.annotations.SerializedName;
 public class TravelBodyEntity {
 
 
+    /**
+     * PARA ASIGNAR UN VIAJE
+     */
+
+
+
+
+    @Expose
+    @SerializedName("idDriverKf")
+    public int idDriverKf;
+
+    @Expose
+    @SerializedName("idTravel")
+    public int idTravel;
+
+    @Expose
+    @SerializedName("isUserAsignedTravel")
+    public int isUserAsignedTravel;
+
 
     @Expose
     @SerializedName("idUserCompanyKf")
@@ -187,6 +206,40 @@ public class TravelBodyEntity {
         mdistance = distance;
     }
 
+    public TravelBodyEntity(int idClientKf, boolean isTravelComany, OriginEntity origin,
+                            DestinationEntity dstination, String dateTravel,int idTypeVehicle, boolean isTravelSendMovil,
+                            int idUserCompanyKf, String hoursAribo,
+                            String   terminal,
+                            String  airlineCompany,
+                            String flyNumber,
+                            int isFleetTravelAssistance,boolean isFleetTravel,
+                            double distanceLabel,
+                            double distance,int idDriverKf) {
+        mIdClientKf = idClientKf;
+        mIsTravelComany = isTravelComany;
+        mOrigin = origin;
+        mDestination = dstination;
+        mDateTravel = dateTravel;
+        mIdTypeVehicle = idTypeVehicle;
+        misTravelSendMovil = isTravelSendMovil;
+        midUserCompanyKf = idUserCompanyKf;
+        mhoursAribo = hoursAribo;
+        mterminal = terminal;
+        mairlineCompany = airlineCompany;
+        mflyNumber = flyNumber;
+        misFleetTravelAssistance = isFleetTravelAssistance;
+        misFleetTravel = isFleetTravel;
+        mdistanceLabel = distanceLabel;
+        mdistance = distance;
+        this.idDriverKf = idDriverKf;
+
+    }
+
+    public TravelBodyEntity(int idDriverKf, int idTravel, int isUserAsignedTravel) {
+        this.idDriverKf = idDriverKf;
+        this.idTravel = idTravel;
+        this.isUserAsignedTravel = isUserAsignedTravel;
+    }
 
     public int getmIdClientKf() {
         return mIdClientKf;
@@ -276,6 +329,30 @@ public class TravelBodyEntity {
 
     public void setMisFleetTravel(boolean misFleetTravel) {
         this.misFleetTravel = misFleetTravel;
+    }
+
+    public int getIdDriverKf() {
+        return idDriverKf;
+    }
+
+    public void setIdDriverKf(int idDriverKf) {
+        this.idDriverKf = idDriverKf;
+    }
+
+    public int getIdTravel() {
+        return idTravel;
+    }
+
+    public void setIdTravel(int idTravel) {
+        this.idTravel = idTravel;
+    }
+
+    public int getIsUserAsignedTravel() {
+        return isUserAsignedTravel;
+    }
+
+    public void setIsUserAsignedTravel(int isUserAsignedTravel) {
+        this.isUserAsignedTravel = isUserAsignedTravel;
     }
 }
 

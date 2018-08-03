@@ -146,5 +146,10 @@ public interface ServicesTravel {
     Call<Double> amountStimate(@Body valuesTravelPreview travel);
 
 
+    @Headers("Content-Type: application/json")
+    @POST("travel/update")
+    Call<InfoTravelEntity> asigned(@Body TravelEntity travel);
+
+
 
 }
