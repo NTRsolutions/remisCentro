@@ -1177,25 +1177,40 @@ public static   File f;
                 } else if (currentTravel.getIdSatatusTravel() == 0) {
 
 
+                    if(dialogTravel != null) {
+                        dialogTravel.dismiss();
+                    }
+
                     final int idTravel = currentTravel.getIdTravel();
 
-                    AlertDialog alertDialog = new AlertDialog.Builder(HomeActivity.this).create();
-                    alertDialog.setTitle("Viaje Cancelado! " + currentTravel.getCodTravel());
-                    alertDialog.setMessage(currentTravel.getReason());
-                    alertDialog.setCancelable(false);
-                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                    confirmCancelByDriver(idTravel);
-                                }
-                            });
-                    alertDialog.show();
+
+
+                    Snackbar snackbar = Snackbar.make(
+                            findViewById(android.R.id.content),
+                            "Viaje Cancelado! " + currentTravel.getCodTravel()+" - "+currentTravel.getReason(),
+                            30000);
+                    snackbar.setActionTextColor(Color.RED);
+                    View snackbarView = snackbar.getView();
+                    TextView textView = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
+                    textView.setTextColor(Color.WHITE);
+                    textView.setTypeface(null, Typeface.BOLD);
+                    snackbar.setAction("Confirmar", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            confirmCancelByDriver(idTravel);
+                        }
+                    });
+
+                    snackbar.show();
+
+
 
                     btInitVisible(false);
                     btCancelVisible(false);
                     btPreFinishVisible(false);
 
+                    materialDesignFAM.setVisibility(View.VISIBLE);
+                    floatingActionButton1.setEnabled(true);
 
                 }
 
@@ -1247,6 +1262,8 @@ public static   File f;
 
                     currentTravel = null;
                     setInfoTravel();
+                    materialDesignFAM.setVisibility(View.VISIBLE);
+                    floatingActionButton1.setEnabled(true);
 
                 }
 

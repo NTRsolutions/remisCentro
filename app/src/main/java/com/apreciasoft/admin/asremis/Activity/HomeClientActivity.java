@@ -1349,7 +1349,7 @@ public class HomeClientActivity extends AppCompatActivity
 
                     loadingGloval.dismiss();
 
-                    Toast.makeText(getApplicationContext(), "VIAJE CANCELADO!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), " VIAJE CANCELADO!", Toast.LENGTH_LONG).show();
 
                     // cerramo el dialog //
                     activeGifMotivos(false,"");
