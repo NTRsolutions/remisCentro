@@ -227,6 +227,8 @@ public static   File f;
     public static int PARAM_68 = 0; // ACTIVAR PAGO CON TARJETA
     public static String PARAM_69 = ""; // ACTIVAR PAGO CON TARJETA
     public static String PARAM_79 = ""; // ACTIVAR PAGO CON TARJETA
+    public static int PARAM_82 = 0; // USO DE MERCADO PAGO
+
 
     public FloatingActionMenu materialDesignFAM;
 
@@ -344,11 +346,26 @@ public static   File f;
         btnPreFinish.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
-                try {
-                    showFinshTravel();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+                builder.setMessage("Esta seguro que quiere finalizar el viaje!")
+                        .setCancelable(false)
+                        .setPositiveButton("Finalizar", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                try {
+                                    showFinshTravel();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        })
+                        .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+
             }
         });
 
@@ -795,17 +812,17 @@ public static   File f;
 
     private void setParamLocal() {
         try {
-        param25 = Integer.parseInt(gloval.getGv_param().get(25).getValue());// SE PUEDE VER PRECIO EN VIAJE EN APP
-        PARAM_66 = Integer.parseInt(gloval.getGv_param().get(65).getValue());// SE PUEDE VER PRECIO EN VIAJE EN APP
-        PARAM_68 = Integer.parseInt(gloval.getGv_param().get(67).getValue());// SE PAGAR CON TARJETA
-
-
+            param25 = Integer.parseInt(gloval.getGv_param().get(25).getValue());// SE PUEDE VER PRECIO EN VIAJE EN APP
+            PARAM_66 = Integer.parseInt(gloval.getGv_param().get(65).getValue());// SE PUEDE VER PRECIO EN VIAJE EN APP
+            PARAM_68 = Integer.parseInt(gloval.getGv_param().get(67).getValue());// SE PAGAR CON TARJETA
             PARAM_69 = gloval.getGv_param().get(68).getValue();//
             PARAM_79 = gloval.getGv_param().get(78).getValue();//
+            PARAM_82 = Integer.parseInt(gloval.getGv_param().get(81).getValue());//
 
         } catch (IndexOutOfBoundsException e) {
             PARAM_69 = "";
             PARAM_79 = "";
+            PARAM_82 = 0;
         } catch (Exception e){
             Log.d("error",e.getMessage());
         }
@@ -2590,7 +2607,7 @@ public static   File f;
                     loading.cancel();
 
                     final android.support.v7.app.AlertDialog.Builder dialog = new android.support.v7.app.AlertDialog.Builder(this);
-                    dialog.setMessage("Viaje ya fue finalizado previamente")
+                    dialog.setMessage("Viaje ya fue Cancelado previamente")
                             .setPositiveButton("Continuar", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface paramDialogInterface, int paramInt) {
@@ -3253,8 +3270,13 @@ public static   File f;
 
     public void preFinihMpago(){
 
-        loading = ProgressDialog.show(HomeActivity.this, "Cargando pago", "Espere unos Segundos...", true, false);
-        new SendPostRequest().execute();
+        if(PARAM_82 == 1) {
+            loading = ProgressDialog.show(HomeActivity.this, "Cargando pago", "Espere unos Segundos...", true, false);
+            new SendPostRequest().execute();
+        }else {
+            idPaymentFormKf = 3;
+            verifickTravelFinish();
+        }
 
 
 /*

@@ -31,6 +31,15 @@ public  class InfoTravelEntity implements Serializable {
     public int isBenefitKmClientList;
 
 
+    @Expose
+    @SerializedName("isTravelFromReturn")
+    public int isTravelFromReturn;
+
+
+    @Expose
+    @SerializedName("isExitSleepIntravel")
+    public int isExitSleepIntravel;
+
 
 
 
@@ -1180,4 +1189,19 @@ public  class InfoTravelEntity implements Serializable {
     }
 
 
+    public int getIsTravelFromReturn() {
+        return isTravelFromReturn;
+    }
+
+    public void setIsTravelFromReturn(int isTravelFromReturn) {
+        this.isTravelFromReturn = isTravelFromReturn;
+    }
+
+    public int getIsExitSleepIntravel() {
+        return isExitSleepIntravel;
+    }
+
+    public void setIsExitSleepIntravel(int isExitSleepIntravel) {
+        this.isExitSleepIntravel = isExitSleepIntravel;
+    }
 }

@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.apreciasoft.admin.asremis.Activity.HomeActivity;
 import com.apreciasoft.admin.asremis.Adapter.CustomExpandableListAdapter;
 import com.apreciasoft.admin.asremis.Entity.InfoTravelEntity;
+import com.apreciasoft.admin.asremis.Fracments.HomeFragment;
 import com.apreciasoft.admin.asremis.R;
 import com.apreciasoft.admin.asremis.Util.ExpandableListDataPump;
 import com.apreciasoft.admin.asremis.Util.GlovalVar;
@@ -76,6 +77,10 @@ public class TravelDialog extends DialogFragment {
         final TextView txt_piso_dialog = (TextView) rootView.findViewById(R.id.txt_piso_dialog);
         final TextView txt_dpto_dialog = (TextView) rootView.findViewById(R.id.txt_dpto_dialog);
 
+        final TextView txt_issleep_dialog = (TextView) rootView.findViewById(R.id.txt_issleep_dialog);
+        final TextView txt_isretunr_dialog = (TextView) rootView.findViewById(R.id.txt_isretunr_dialog);
+
+
         final TextView txt_observation = (TextView) rootView.findViewById(R.id.txt_observation);//is multi destination
 
 
@@ -112,6 +117,19 @@ public class TravelDialog extends DialogFragment {
 
         txt_piso_dialog.setText(currentTravel.getFLOOR());
         txt_dpto_dialog.setText(currentTravel.getDepartment());
+
+
+        if(currentTravel.getIsExitSleepIntravel() == 1){
+            txt_issleep_dialog.setText("Si");
+        }else {
+            txt_issleep_dialog.setText("No");
+        }
+
+        if(currentTravel.getIsTravelFromReturn() == 1){
+            txt_isretunr_dialog.setText("Si");
+        }else {
+            txt_isretunr_dialog.setText("No");
+        }
 
 
        txt_observation.setText(currentTravel.getObservationFromDriver());

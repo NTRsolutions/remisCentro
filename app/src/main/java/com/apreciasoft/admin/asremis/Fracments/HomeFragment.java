@@ -160,6 +160,9 @@ public class HomeFragment extends Fragment implements
     public static TextView txt_lote = null;
     public static TextView txt_flete = null;
     public static TextView txt_piso_dialog = null;
+    public static TextView txt_issleep_dialog = null;
+    public static TextView txt_isretunr_dialog = null;
+
     public static TextView txt_dpto_dialog = null;
     public static TextView txt_distance_real = null;
     public static  SharedPreferences.Editor editor;
@@ -252,6 +255,11 @@ public class HomeFragment extends Fragment implements
 
         HomeFragment.txt_piso_dialog =  getActivity().findViewById(R.id.txt_piso_dialog);
         HomeFragment.txt_dpto_dialog =  getActivity().findViewById(R.id.txt_dpto_dialog);
+
+        HomeFragment.txt_issleep_dialog =  getActivity().findViewById(R.id.txt_issleep_dialog);
+        HomeFragment.txt_isretunr_dialog =  getActivity().findViewById(R.id.txt_isretunr_dialog);
+
+
 
         HomeFragment.txt_km_info =  getActivity().findViewById(R.id.txt_km_info);
         HomeFragment.txt_amount_info =  getActivity().findViewById(R.id.txt_amount_info);
@@ -1226,6 +1234,20 @@ public class HomeFragment extends Fragment implements
         HomeFragment.txt_flete.setText(String.valueOf(currentTravel.getIsFleetTravelAssistance()));
         HomeFragment.txt_dpto_dialog.setText(currentTravel.getDepartment());
         HomeFragment.txt_piso_dialog.setText(currentTravel.getFLOOR());
+
+        if(currentTravel.getIsExitSleepIntravel() == 1){
+            HomeFragment.txt_issleep_dialog.setText("Si");
+        }else {
+            HomeFragment.txt_issleep_dialog.setText("No");
+        }
+
+        if(currentTravel.getIsTravelFromReturn() == 1){
+            HomeFragment.txt_isretunr_dialog.setText("Si");
+        }else {
+            HomeFragment.txt_isretunr_dialog.setText("No");
+        }
+
+
 
         HomeFragment.txt_km_info.setText(currentTravel.getDistanceLabel());
 
