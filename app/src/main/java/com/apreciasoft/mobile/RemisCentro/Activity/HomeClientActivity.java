@@ -1,4 +1,6 @@
 package com.apreciasoft.mobile.RemisCentro.Activity;
+
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.FragmentManager;
 import android.app.NotificationManager;
@@ -54,6 +56,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
 import com.apreciasoft.mobile.RemisCentro.Entity.DestinationEntity;
 import com.apreciasoft.mobile.RemisCentro.Entity.InfoTravelEntity;
 import com.apreciasoft.mobile.RemisCentro.Entity.OriginEntity;
@@ -93,11 +96,9 @@ import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -203,6 +204,7 @@ public class HomeClientActivity extends AppCompatActivity
 
     public   NumberPicker np;
 
+    @SuppressLint("InvalidWakeLockTag")
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -210,8 +212,10 @@ public class HomeClientActivity extends AppCompatActivity
         Fabric.with(this, new Crashlytics());
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
+
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiverLoadTodays, new IntentFilter("update-message"));
         //LocalBroadcastManager.getInstance(this).registerReceiver(recibeNotifiacionSocket, new IntentFilter("update-loaction-driver"));
+
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences(HttpConexion.instance, 0); // 0 - for private mode
         editor = pref.edit();
@@ -232,38 +236,56 @@ public class HomeClientActivity extends AppCompatActivity
        // Log.d(TAG, token);
         enviarTokenAlServidor(token,gloval.getGv_user_id());
 
-
         btnrequertReser = (Button) findViewById(R.id.btnrequertReser);
         btnrequertReser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 try {
+
                     requestTravel();
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
+
             }
+
+
         });
 
         btnrequetTravelNow = (Button) findViewById(R.id.btn_requetTravelNow);
         btnrequetTravelNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 try {
+
                     requestTravel();
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
+
             }
+
+
         });
+
+
+
 
         materialDesignFAM = (FloatingActionMenu) findViewById(R.id.material_design_android_floating_action_menu);
         floatingActionButton1 = (FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item1);
         floatingActionButton2 = (FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item2);
 
+
         floatingActionButton1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                //TODO something when floating action menu first item clicked
+
 
                 if(isReervation)
                 {
@@ -281,8 +303,11 @@ public class HomeClientActivity extends AppCompatActivity
                 }
 
                 materialDesignFAM.close(true);
+
+
             }
         });
+
 
         floatingActionButton2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -291,6 +316,7 @@ public class HomeClientActivity extends AppCompatActivity
                 materialDesignFAM.close(true);
             }
         });
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -322,6 +348,8 @@ public class HomeClientActivity extends AppCompatActivity
         ws = new WsTravel(this);
         ws.connectWebSocket(gloval.getGv_user_id());
 
+
+
         /*GOOGLE PACE*/
         autoCompView = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
         autoCompView.setAdapter(new GooglePlacesAutocompleteAdapter(this, R.layout.list_item));
@@ -329,6 +357,9 @@ public class HomeClientActivity extends AppCompatActivity
         autoCompView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick (AdapterView < ? > adapter, View view, final int position, long arg){
+                // TODO Auto-generated method stub
+
+
 
                 Thread thread = new Thread(new Runnable(){
                     @Override
@@ -338,6 +369,7 @@ public class HomeClientActivity extends AppCompatActivity
                 });
 
                 thread.start();
+
 
                 String str = (String) adapter.getItemAtPosition(position);
 
@@ -398,9 +430,15 @@ public class HomeClientActivity extends AppCompatActivity
         _setCategory2();
         /*------------------*/
 
+
         _setEditPlaceHolder();
 
+
         getPick(gloval.getGv_user_id());
+
+
+
+
 
 
         int PARAM_35 =  Integer.parseInt(gloval.getGv_param().get(34).getValue());// PUEDE SOLICITAR  RESERVA
@@ -414,6 +452,10 @@ public class HomeClientActivity extends AppCompatActivity
         if(PARAM_36 != 1){
             floatingActionButton2.setEnabled(false);
         }
+
+
+
+
 
         checkPermision();
 
@@ -455,6 +497,8 @@ public class HomeClientActivity extends AppCompatActivity
             InputMethodManager key = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
             key.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+
+
     }
 
     public void checkPermision()
@@ -1571,13 +1615,20 @@ public class HomeClientActivity extends AppCompatActivity
         @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
         @Override
         public void onReceive(Context context, Intent intent) {
+
+
             currentTravel = gloval.getGv_travel_current();
+
             if(gloval.getGv_id_profile() == 2 || gloval.getGv_id_profile() == 5) {
                 getCurrentTravelByIdClient();
             }
             Log.d("TRAVEL","LLEGO NOTIFICCION");
+
+
         }
     };
+
+
 
     public  void  getCurrentTravelByIdClient()
     {
@@ -1594,6 +1645,8 @@ public class HomeClientActivity extends AppCompatActivity
             }else  if (gloval.getGv_id_profile() == 5){
                  call = this.daoTravel.getCurrentTravelByIdUserCompany(gloval.getGv_user_id());
             }
+
+
 
             call.enqueue(new Callback<InfoTravelEntity>() {
                 @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)

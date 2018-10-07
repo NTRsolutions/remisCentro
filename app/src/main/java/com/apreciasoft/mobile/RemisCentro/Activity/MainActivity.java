@@ -1,21 +1,20 @@
 package com.apreciasoft.mobile.RemisCentro.Activity;
 
-        import android.Manifest;
-        import android.annotation.SuppressLint;
-        import android.app.ProgressDialog;
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-        import android.content.SharedPreferences;
-        import android.content.pm.PackageManager;
-        import android.graphics.Color;
-        import android.graphics.Typeface;
-        import android.net.Uri;
-        import android.os.Bundle;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.net.Uri;
+import android.os.Bundle;
 import android.os.PowerManager;
-        import android.support.annotation.NonNull;
-        import android.support.design.widget.Snackbar;
-        import android.support.v4.app.ActivityCompat;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -24,31 +23,28 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
-        import com.apreciasoft.mobile.RemisCentro.Entity.VehicleType;
-        import com.apreciasoft.mobile.RemisCentro.Entity.login;
-        import com.apreciasoft.mobile.RemisCentro.Entity.paramEntity;
-        import com.apreciasoft.mobile.RemisCentro.Entity.user;
+import com.apreciasoft.mobile.RemisCentro.Entity.VehicleType;
+import com.apreciasoft.mobile.RemisCentro.Entity.login;
+import com.apreciasoft.mobile.RemisCentro.Entity.paramEntity;
+import com.apreciasoft.mobile.RemisCentro.Entity.user;
 import com.apreciasoft.mobile.RemisCentro.Entity.userFull;
 import com.apreciasoft.mobile.RemisCentro.Fracments.RegisterForm;
 import com.apreciasoft.mobile.RemisCentro.Http.HttpConexion;
 import com.apreciasoft.mobile.RemisCentro.R;
 import com.apreciasoft.mobile.RemisCentro.Services.ServicesLoguin;
 import com.apreciasoft.mobile.RemisCentro.Util.GlovalVar;
-        import com.crashlytics.android.Crashlytics;
-        import com.google.gson.Gson;
+import com.crashlytics.android.Crashlytics;
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-        import com.google.gson.reflect.TypeToken;
-        import java.util.ArrayList;
+import com.google.gson.reflect.TypeToken;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-        import io.fabric.sdk.android.Fabric;
-        import retrofit2.Call;
+import io.fabric.sdk.android.Fabric;
+import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
 import static com.apreciasoft.mobile.RemisCentro.Util.Utils.verificaConexion;
 
 public class MainActivity extends AppCompatActivity {
@@ -59,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     public static String version = "2.0.16";
     public ProgressDialog loading;
     ServicesLoguin apiService = null;
-    public  GlovalVar gloval = null;
+    public GlovalVar gloval = null;
     public static final int REGISTER_ACTIVITY = 1;
     public  SharedPreferences.Editor editor;
     public   SharedPreferences pref;
@@ -74,11 +70,6 @@ public class MainActivity extends AppCompatActivity {
         pref = getApplicationContext().getSharedPreferences(HttpConexion.instance, 0);
 
         if(checkAndRequestPermissions()) {
-
-            //  mamelow
-           // isStoragePermissionGranted();
-
-            //
 
             if (pref.getBoolean("isLoged", false)) {
 
@@ -108,9 +99,6 @@ public class MainActivity extends AppCompatActivity {
 
         if(gloval.getGv_logeed())
         {
-
-
-
             if(gloval.getGv_id_profile() == 2 || gloval.getGv_id_profile() == 5)
             {
                 // LAMAMOS A EL SEGUNDO ACTIVITY DE HOME CIENT//
@@ -147,19 +135,15 @@ public class MainActivity extends AppCompatActivity {
                 snackbar.show();
             }
 
-
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                 // only for gingerbread and newer versions
-
                 checkAndRequestPermissions();
             }
 
-
             //evitar que la pantalla se apague
-            final PowerManager pm=(PowerManager)getSystemService(Context.POWER_SERVICE);
+            final PowerManager pm= (PowerManager)getSystemService(Context.POWER_SERVICE);
             this.wakelock=pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "etiqueta");
             wakelock.acquire();
-
 
             // ESTO PERMITE QUE CUANDO LA APP ESTE EN SEGUNDO PLADONO Y LA NOTIFICACION LLEGUE SI LÑE DA CLICK ABRAE LA APP EN HOME ACTIVITY
             if (getIntent().getExtras() != null) {
@@ -170,8 +154,6 @@ public class MainActivity extends AppCompatActivity {
             else
             {
                 HttpConexion.setBase(HttpConexion.instance);
-
-
 
                 final Button btnLogin = (Button) findViewById(R.id.btn_login);
                 btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -193,6 +175,8 @@ public class MainActivity extends AppCompatActivity {
                 TextView txtVersion = findViewById(R.id.lbl_version);
                 txtVersion.setText("V: "+version);
             }
+
+
         }
 
     }
@@ -232,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], @NonNull int[] grantResults) {
+                                           String permissions[], int[] grantResults) {
         Log.d(TAG, "Permission callback called-------");
         switch (requestCode) {
             case REQUEST_ID_MULTIPLE_PERMISSIONS: {
@@ -305,7 +289,7 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
     private void explain(String msg){
-        final android.support.v7.app.AlertDialog.Builder dialog = new android.support.v7.app.AlertDialog.Builder(this);
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setMessage(msg)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
@@ -332,8 +316,6 @@ public class MainActivity extends AppCompatActivity {
         try {
             loading = ProgressDialog.show(MainActivity.this, "Autentificando", "Espere unos Segundos...", true, false);
 
-
-
             Call<Boolean> call = this.apiService.checkVersion(version);
             Log.d("Call request", call.request().toString());
             Log.d("Call request header", call.request().headers().toString());
@@ -352,9 +334,7 @@ public class MainActivity extends AppCompatActivity {
 
                     if (response.code() == 200) {
                         boolean rs = (boolean) response.body();
-
-
-
+                        Log.i(TAG,"value: "+rs);
                         if (!rs) {
                             loguin();
                         } else {
@@ -454,93 +434,90 @@ public class MainActivity extends AppCompatActivity {
                                 userLogued.response.getUser().getIdProfileUser() == 5 ||
                                 userLogued.response.getUser().getIdProfileUser() == 3){
 
-                        if (!userLogued.response.isDriverInactive()) {
+                            if (!userLogued.response.isDriverInactive()) {
+
+                                gloval.setGv_user_id(userLogued.response.getUser().getIdUser());
+                                gloval.setGv_user_mail(userLogued.response.getUser().getEmailUser());
+
+                                gloval.setGv_user_name(userLogued.response.getUser().getFirstNameUser() + " "
+                                        + userLogued.response.getUser().getLastNameUser());
+
+                                gloval.setGv_id_cliet(userLogued.response.getUser().getIdClient());
+                                gloval.setGv_id_driver(userLogued.response.getUser().getIdDriver());
+                                gloval.setGv_id_profile(userLogued.response.getUser().getIdProfileUser());
+                                gloval.setGv_id_vehichle(userLogued.response.getUser().getIdVeichleAsigned());
+                                gloval.setGv_travel_current(userLogued.response.getCurrentTravel());
+                                gloval.setGv_param(userLogued.response.getParam());
+                                gloval.setGv_logeed(true);
+                                //gloval.setGv_driverinfo(userLogued.response.getDriver());
+                                gloval.setGv_clientinfo(userLogued.response.getClient());
+                                gloval.setGv_listvehicleType(userLogued.response.getListVehicleType());
+
+                                gloval.setGv_idResourceSocket(userLogued.response.getUser().getIdResourceSocket());
+
+                                HttpConexion.setBase(userLogued.response.getInstance());
+                                // SETEAMOS LA INTANCIA PARA AUTENTICARNOS
+
+                                if (userLogued.response.getUser().getIdProfileUser() == 2
+                                        || userLogued.response.getUser().getIdProfileUser() == 5) {
+                                    // LAMAMOS A EL SEGUNDO ACTIVITY DE HOME CIENT//
+                                    Intent homeClient = new Intent(MainActivity.this, HomeClientActivity.class);
+                                    startActivity(homeClient);
+                                } else {
+
+                                    gloval.setGv_srviceActive(userLogued.response.getDriver().getIdStatusDriverTravelKf());
+                                    gloval.setGv_nr_driver(userLogued.response.getDriver().getNrDriver());
 
 
-                            gloval.setGv_user_id(userLogued.response.getUser().getIdUser());
-                            gloval.setGv_user_mail(userLogued.response.getUser().getEmailUser());
-
-                            gloval.setGv_user_name(userLogued.response.getUser().getFirstNameUser() + " "
-                                    + userLogued.response.getUser().getLastNameUser());
-
-                            gloval.setGv_id_cliet(userLogued.response.getUser().getIdClient());
-                            gloval.setGv_id_driver(userLogued.response.getUser().getIdDriver());
-                            gloval.setGv_id_profile(userLogued.response.getUser().getIdProfileUser());
-                            gloval.setGv_id_vehichle(userLogued.response.getUser().getIdVeichleAsigned());
-                            gloval.setGv_travel_current(userLogued.response.getCurrentTravel());
-                            gloval.setGv_param(userLogued.response.getParam());
-                            gloval.setGv_logeed(true);
-                            //gloval.setGv_driverinfo(userLogued.response.getDriver());
-                            gloval.setGv_clientinfo(userLogued.response.getClient());
-                            gloval.setGv_listvehicleType(userLogued.response.getListVehicleType());
-
-                            gloval.setGv_idResourceSocket(userLogued.response.getUser().getIdResourceSocket());
-
-                            HttpConexion.setBase(userLogued.response.getInstance());
-                            // SETEAMOS LA INTANCIA PARA AUTENTICARNOS
-
-
-                            if (userLogued.response.getUser().getIdProfileUser() == 2
-                                    || userLogued.response.getUser().getIdProfileUser() == 5) {
-                                // LAMAMOS A EL SEGUNDO ACTIVITY DE HOME CIENT//
-                                Intent homeClient = new Intent(MainActivity.this, HomeClientActivity.class);
-                                startActivity(homeClient);
-                            } else {
-
-                                gloval.setGv_srviceActive(userLogued.response.getDriver().getIdStatusDriverTravelKf());
-                                gloval.setGv_nr_driver(userLogued.response.getDriver().getNrDriver());
-
-
-                                if (userLogued.response.getCurrentTravel() != null) {
-                                    gloval.setGv_travel_current(userLogued.response.getCurrentTravel());
+                                    if (userLogued.response.getCurrentTravel() != null) {
+                                        gloval.setGv_travel_current(userLogued.response.getCurrentTravel());
+                                    }
+                                    // LAMAMOS A EL SEGUNDO ACTIVITY//
+                                    Intent home = new Intent(MainActivity.this, HomeActivity.class);
+                                    startActivity(home);
                                 }
-                                // LAMAMOS A EL SEGUNDO ACTIVITY//
-                                Intent home = new Intent(MainActivity.this, HomeActivity.class);
-                                startActivity(home);
+
+                                /** PREFERENCIAS LOCALES **/
+                                pref = getApplicationContext().getSharedPreferences(HttpConexion.instance, 0); // 0 - for private mode
+                                editor = pref.edit();
+
+                                Gson gson = new Gson();
+
+                                editor.putBoolean("isLoged", true);
+                                editor.putInt("user_id", gloval.getGv_user_id());
+                                editor.putString("is_resourceSocket", gloval.getGv_idResourceSocket());
+                                editor.putInt("client_id", gloval.getGv_id_cliet());
+                                editor.putInt("profile_id", gloval.getGv_id_profile());
+                                editor.putInt("driver_id", gloval.getGv_id_driver());
+                                editor.putString("user_mail", gloval.getGv_user_mail());
+                                editor.putString("user_name", gloval.getGv_user_name());
+                                editor.putString("instance", gloval.getGv_base_intance());
+                                editor.putString("param", gson.toJson(gloval.getGv_param()));
+                                editor.putString("list_vehichle", gson.toJson(gloval.getGv_listvehicleType()));
+                                editor.putString("nrDriver", gloval.getGv_nr_driver());
+                                editor.putInt("time_slepp", 0);
+                                editor.commit(); // commit changes
+                                /************************/
+
+                                loading.dismiss();
+
+                            } else {
+                                loading.dismiss();
+                                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                                alertDialog.setTitle("Informacion");
+                                alertDialog.setMessage("Usuario/Inactivo");
+                                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                alertDialog.show();
+                                HttpConexion.setBase(HttpConexion.instance);
+
                             }
 
-
-                            /** PREFERENCIAS LOCALES **/
-                            pref = getApplicationContext().getSharedPreferences(HttpConexion.instance, 0); // 0 - for private mode
-                            editor = pref.edit();
-
-                            Gson gson = new Gson();
-
-                            editor.putBoolean("isLoged", true);
-                            editor.putInt("user_id", gloval.getGv_user_id());
-                            editor.putString("is_resourceSocket", gloval.getGv_idResourceSocket());
-                            editor.putInt("client_id", gloval.getGv_id_cliet());
-                            editor.putInt("profile_id", gloval.getGv_id_profile());
-                            editor.putInt("driver_id", gloval.getGv_id_driver());
-                            editor.putString("user_mail", gloval.getGv_user_mail());
-                            editor.putString("user_name", gloval.getGv_user_name());
-                            editor.putString("instance", gloval.getGv_base_intance());
-                            editor.putString("param", gson.toJson(gloval.getGv_param()));
-                            editor.putString("list_vehichle", gson.toJson(gloval.getGv_listvehicleType()));
-                            editor.putString("nrDriver", gloval.getGv_nr_driver());
-                            editor.putInt("time_slepp", 0);
-                            editor.commit(); // commit changes
-                            /************************/
-
-                            loading.dismiss();
-
-                        } else {
-                            loading.dismiss();
-                            AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-                            alertDialog.setTitle("Informacion");
-                            alertDialog.setMessage("Usuario/Inactivo");
-                            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.dismiss();
-                                        }
-                                    });
-                            alertDialog.show();
-                            HttpConexion.setBase(HttpConexion.instance);
-
-                        }
-
-                    }else {
+                        }else {
                             loading.dismiss();
                             AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
                             alertDialog.setTitle("Informacion");
@@ -553,8 +530,7 @@ public class MainActivity extends AppCompatActivity {
                                     });
                             alertDialog.show();
                             HttpConexion.setBase(HttpConexion.instance);
-
-                        }
+                            }
 
 
 
