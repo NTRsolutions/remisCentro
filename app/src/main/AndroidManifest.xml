@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.apreciasoft.admin.RemisCentro">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.apreciasoft.mobile.RemisCentro">
 
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -16,16 +17,15 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="TASKS"/>
 
-
-
     <application
-        android:name=".Util.GlovalVar"
+        android:name="com.apreciasoft.mobile.RemisCentro.Util.GlovalVar"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity
-            android:name=".Activity.indexActivity"
+            android:name="com.apreciasoft.mobile.RemisCentro.Activity.indexActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,33 +34,36 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activity.MainActivity" />
+            android:name="com.apreciasoft.mobile.RemisCentro.Activity.MainActivity" />
         <activity
-            android:name=".Activity.HomeActivity"
+            android:name="com.apreciasoft.mobile.RemisCentro.Activity.HomeActivity"
             android:label="@string/title_activity_home"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Activity.HomeClientActivity"
+            android:name="com.apreciasoft.mobile.RemisCentro.Activity.HomeClientActivity"
             android:label="@string/title_activity_home"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Fracments.PaymentCreditCar" />
-        <activity android:name=".Fracments.activity_card" />
-        <activity android:name=".Fracments.RegisterCliente" />
-        <activity android:name=".Fracments.RegisterForm" />
-        <activity android:name=".Fracments.NewFormDriver" />
-        <activity android:name=".Fracments.NewFormClient" />
-        <activity android:name=".Fracments.InfoDetailTravelAc" />
-        <activity android:name=".Util.Signature" />
+        <activity android:name="com.apreciasoft.mobile.RemisCentro.Fracments.PaymentCreditCar" />
+        <activity android:name="com.apreciasoft.mobile.RemisCentro.Fracments.activity_card" />
+        <activity android:name="com.apreciasoft.mobile.RemisCentro.Fracments.RegisterCliente" />
+        <activity android:name="com.apreciasoft.mobile.RemisCentro.Fracments.RegisterForm" />
+        <activity android:name="com.apreciasoft.mobile.RemisCentro.Fracments.NewFormDriver" />
+        <activity android:name="com.apreciasoft.mobile.RemisCentro.Fracments.NewFormClient" />
+        <activity android:name="com.apreciasoft.mobile.RemisCentro.Fracments.InfoDetailTravelAc" />
+        <activity android:name="com.apreciasoft.mobile.RemisCentro.Util.Signature" />
 
 
-        <service android:name=".Util.FirebaseNotifactionSevices">
+        <service android:name="com.apreciasoft.mobile.RemisCentro.Util.FirebaseNotifactionSevices"
+            tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".Util.FirebaseInstanceIdSevices">
+
+        <service android:name="com.apreciasoft.mobile.RemisCentro.Util.FirebaseInstanceIdSevices"
+            tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
@@ -74,17 +77,21 @@
             android:value="AIzaSyApZ1embZ2bhcI4Ir8NepmyjTfNvGvjUas" />
 
         <service
-            android:name=".Util.FloatingWidgetService"
+            android:name="com.apreciasoft.mobile.RemisCentro.Util.FloatingWidgetService"
             android:enabled="true"
             android:exported="false" />
 
         <service
-            android:name=".Util.ServicesSleep"
+            android:name="com.apreciasoft.mobile.RemisCentro.Util.ServicesSleep"
             android:enabled="true"
             android:exported="false" />
 
+        <!-- Meta data-->
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="49fba1b63755e1ea4cbc0d53acc6b33857d405f1"
+            />
 
     </application>
-
 
 </manifest>
