@@ -1,4 +1,4 @@
-package com.apreciasoft.mobile.RemisCentro.Fracments;
+package com.apreciasoft.mobile.RemisCentro.Fragments;
 
 import android.Manifest;
 import android.annotation.TargetApi;
@@ -30,7 +30,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.apreciasoft.mobile.RemisCentro.Activity.HomeActivity;
 import com.apreciasoft.mobile.RemisCentro.Entity.InfoTravelEntity;
 import com.apreciasoft.mobile.RemisCentro.Entity.TravelSqliteEntity;
@@ -103,9 +102,6 @@ public class HomeFragment extends Fragment implements
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
-
-
-
     /* SOCKET MAPA */
     public static Socket SPCKETMAP;
     public static String URL_SOCKET_MAP =  HttpConexion.PROTOCOL+"://"+HttpConexion.ip+":"+HttpConexion.portWsWeb+"";
@@ -122,8 +118,8 @@ public class HomeFragment extends Fragment implements
     static GoogleApiClient mGoogleApiClient;
     public static  Location mLastLocation;
     public static  String nameLocation;
-    public static   PolylineOptions options;
-    public static   PolylineOptions optionReturnActive;
+    public static PolylineOptions options;
+    public static PolylineOptions optionReturnActive;
     Marker mCurrLocationMarker;
     //public boolean isFistLocation = true;
     public boolean isReadyDrawingRouting = false;
@@ -157,7 +153,7 @@ public class HomeFragment extends Fragment implements
     //****//
 
 
-    public MapFragment  mMap;
+    public MapFragment mMap;
     public static int PARAM_26  = 0;
 
 
@@ -339,7 +335,7 @@ public class HomeFragment extends Fragment implements
 
 
         //Initialize Google Play Services
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
             Log.d(TAG,"T-1");
 
@@ -652,8 +648,8 @@ public class HomeFragment extends Fragment implements
 
 
     private TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
-        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-            return new java.security.cert.X509Certificate[] {};
+        public X509Certificate[] getAcceptedIssuers() {
+            return new X509Certificate[] {};
         }
 
         public void checkClientTrusted(X509Certificate[] chain,
@@ -754,7 +750,7 @@ public class HomeFragment extends Fragment implements
                  * NODE JS
                  * */
                 if(this.getActivity().getApplicationContext() != null) {
-                    if (Utils.verificaConexion(this.getActivity().getApplicationContext()) == true) {
+                    if (Utils.verificaConexion(this.getActivity().getApplicationContext())) {
                         if(SPCKETMAP == null){
                             if(addresses.size() > 0) {
                                 conexionSocketMap(addresses.get(0).getLatitude(), addresses.get(0).getLongitude());
@@ -862,8 +858,8 @@ public class HomeFragment extends Fragment implements
                             if (HomeActivity.currentTravel.getLatDestination() != null) {
                                 if (HomeActivity.currentTravel.getLonDestination() != null) {
 
-                                    if (HomeActivity.currentTravel.getLatDestination() != "") {
-                                        if (HomeActivity.currentTravel.getLonDestination() != "") {
+                                    if (!HomeActivity.currentTravel.getLatDestination().equals("")) {
+                                        if (!HomeActivity.currentTravel.getLonDestination().equals("")) {
                                             LatLng desination = new LatLng(Double.parseDouble(HomeActivity.currentTravel.getLatDestination()), Double.parseDouble(HomeActivity.currentTravel.getLonDestination()));
                                             setDirection(desination);
                                             isReadyDrawingRouting = true;
@@ -1629,11 +1625,7 @@ public class HomeFragment extends Fragment implements
         if(listPointSave.size() == 0){
             _DISTANCE = COLUMN_DISTANCE;
         }
-
-
         sqlite.close();
-
-
         return _DISTANCE;
     }
 

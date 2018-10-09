@@ -1,4 +1,4 @@
-package com.apreciasoft.mobile.RemisCentro.Fracments;
+package com.apreciasoft.mobile.RemisCentro.Fragments;
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
@@ -14,16 +14,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.apreciasoft.mobile.RemisCentro.Adapter.ReservationsAdapter;
 import com.apreciasoft.mobile.RemisCentro.Entity.InfoTravelEntity;
 import com.apreciasoft.mobile.RemisCentro.Http.HttpConexion;
 import com.apreciasoft.mobile.RemisCentro.R;
 import com.apreciasoft.mobile.RemisCentro.Services.ServicesTravel;
 import com.apreciasoft.mobile.RemisCentro.Util.GlovalVar;
-
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

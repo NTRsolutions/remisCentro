@@ -1,9 +1,7 @@
 package com.apreciasoft.mobile.RemisCentro.Services;
 
 import com.apreciasoft.mobile.RemisCentro.Entity.notification;
-
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
@@ -21,7 +19,7 @@ public interface ServicesNotification {
 
     @Headers("Content-Type: application/json")
     @GET("notifications/read/{id}/{idUser}")
-    Call<List<notification>> readNotifications(@Path("id") int id,@Path("idUser") int idUser);
+    Call<List<notification>> readNotifications(@Path("id") int id, @Path("idUser") int idUser);
 
 
 

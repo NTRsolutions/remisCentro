@@ -7,7 +7,6 @@ import com.apreciasoft.mobile.RemisCentro.Entity.login;
 import com.apreciasoft.mobile.RemisCentro.Entity.reporte;
 import com.apreciasoft.mobile.RemisCentro.Entity.token;
 import com.apreciasoft.mobile.RemisCentro.Entity.userFull;
-
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;

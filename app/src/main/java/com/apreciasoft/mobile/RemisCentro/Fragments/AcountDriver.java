@@ -1,4 +1,4 @@
-package com.apreciasoft.mobile.RemisCentro.Fracments;
+package com.apreciasoft.mobile.RemisCentro.Fragments;
 
 import android.app.Fragment;
 import android.content.DialogInterface;
@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.apreciasoft.mobile.RemisCentro.Adapter.AdapterRows;
 import com.apreciasoft.mobile.RemisCentro.Entity.DriverCurrentAcountEntity;
 import com.apreciasoft.mobile.RemisCentro.Entity.LiquidationEntity;
@@ -21,10 +20,8 @@ import com.apreciasoft.mobile.RemisCentro.Http.HttpConexion;
 import com.apreciasoft.mobile.RemisCentro.R;
 import com.apreciasoft.mobile.RemisCentro.Services.ServicesDriver;
 import com.apreciasoft.mobile.RemisCentro.Util.GlovalVar;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

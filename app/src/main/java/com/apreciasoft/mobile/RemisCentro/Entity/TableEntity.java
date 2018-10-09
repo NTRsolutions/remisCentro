@@ -8,9 +8,7 @@ import android.view.Gravity;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-
 import com.apreciasoft.mobile.RemisCentro.R;
-
 import java.util.ArrayList;
 
 /**

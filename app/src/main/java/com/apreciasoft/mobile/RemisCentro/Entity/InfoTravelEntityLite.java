@@ -28,8 +28,6 @@ public  class InfoTravelEntityLite implements Serializable {
 
 
 
-
-
     @Expose
     @SerializedName("idDriverOld")
     public int idDriverOld;

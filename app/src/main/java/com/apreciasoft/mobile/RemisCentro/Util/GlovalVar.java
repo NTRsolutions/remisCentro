@@ -45,19 +45,26 @@ import java.util.List;
 
     private int gv_hour_init_travel;
 
+
+
     private  String gv_idResourceSocket;
 
     @Override
     public void onCreate() {
         super.onCreate();
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+
+
     }
 
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(this);
+
     }
+
+
 
     public GlovalVar() {
         this.gv_user_name = "";

@@ -3,7 +3,6 @@ package com.apreciasoft.mobile.RemisCentro.Util;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
-
 import com.apreciasoft.mobile.RemisCentro.Activity.MainActivity;
 import com.apreciasoft.mobile.RemisCentro.Entity.token;
 import com.apreciasoft.mobile.RemisCentro.Entity.tokenFull;
@@ -13,7 +12,6 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -27,8 +25,6 @@ public class FirebaseInstanceIdSevices extends FirebaseInstanceIdService {
     public static final String TAG = "NOTICIAS";
     ServicesLoguin apiService = null;
     public GlovalVar gloval;
-
-
 
     @Override
     public void onTokenRefresh() {
@@ -47,14 +43,11 @@ public class FirebaseInstanceIdSevices extends FirebaseInstanceIdService {
         if(gloval != null) {
             this.apiService = HttpConexion.getUri().create(ServicesLoguin.class);
 
-
             token T = new token();
-
 
             T.setToken(new tokenFull(_str_token, gloval.getGv_user_id(), gloval.getGv_id_driver(), MainActivity.version));
 
             Call<Boolean> call = this.apiService.token(T);
-
 
             GsonBuilder builder = new GsonBuilder();
             Gson gson = builder.create();

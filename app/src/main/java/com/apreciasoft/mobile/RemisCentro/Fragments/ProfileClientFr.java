@@ -1,4 +1,4 @@
-package com.apreciasoft.mobile.RemisCentro.Fracments;
+package com.apreciasoft.mobile.RemisCentro.Fragments;
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
@@ -22,7 +22,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import com.apreciasoft.mobile.RemisCentro.Entity.RequetClient;
 import com.apreciasoft.mobile.RemisCentro.Entity.client;
 import com.apreciasoft.mobile.RemisCentro.Entity.clienteFull;
@@ -33,13 +32,11 @@ import com.apreciasoft.mobile.RemisCentro.Util.GlovalVar;
 import com.apreciasoft.mobile.RemisCentro.Util.RequestHandler;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

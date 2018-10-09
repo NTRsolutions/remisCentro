@@ -56,7 +56,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
 import com.apreciasoft.mobile.RemisCentro.Entity.DestinationEntity;
 import com.apreciasoft.mobile.RemisCentro.Entity.InfoTravelEntity;
 import com.apreciasoft.mobile.RemisCentro.Entity.OriginEntity;
@@ -70,13 +69,13 @@ import com.apreciasoft.mobile.RemisCentro.Entity.resp;
 import com.apreciasoft.mobile.RemisCentro.Entity.token;
 import com.apreciasoft.mobile.RemisCentro.Entity.tokenFull;
 import com.apreciasoft.mobile.RemisCentro.Entity.valuesTravelPreview;
-import com.apreciasoft.mobile.RemisCentro.Fracments.HistoryTravelDriver;
-import com.apreciasoft.mobile.RemisCentro.Fracments.HomeClientFragment;
-import com.apreciasoft.mobile.RemisCentro.Fracments.ListTypeCarLayout;
-import com.apreciasoft.mobile.RemisCentro.Fracments.NotificationsFrangment;
-import com.apreciasoft.mobile.RemisCentro.Fracments.PaymentFormClient;
-import com.apreciasoft.mobile.RemisCentro.Fracments.ProfileClientFr;
-import com.apreciasoft.mobile.RemisCentro.Fracments.ReservationsFrangment;
+import com.apreciasoft.mobile.RemisCentro.Fragments.HistoryTravelDriver;
+import com.apreciasoft.mobile.RemisCentro.Fragments.HomeClientFragment;
+import com.apreciasoft.mobile.RemisCentro.Fragments.ListTypeCarLayout;
+import com.apreciasoft.mobile.RemisCentro.Fragments.NotificationsFrangment;
+import com.apreciasoft.mobile.RemisCentro.Fragments.PaymentFormClient;
+import com.apreciasoft.mobile.RemisCentro.Fragments.ProfileClientFr;
+import com.apreciasoft.mobile.RemisCentro.Fragments.ReservationsFrangment;
 import com.apreciasoft.mobile.RemisCentro.Http.HttpConexion;
 import com.apreciasoft.mobile.RemisCentro.R;
 import com.apreciasoft.mobile.RemisCentro.Services.ServicesLoguin;
@@ -112,7 +111,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.fabric.sdk.android.Fabric;
 import retrofit2.Call;
@@ -233,7 +231,7 @@ public class HomeClientActivity extends AppCompatActivity
         gloval = ((GlovalVar)getApplicationContext());
 
         String token = FirebaseInstanceId.getInstance().getToken();
-       // Log.d(TAG, token);
+        // Log.d(TAG, token);
         enviarTokenAlServidor(token,gloval.getGv_user_id());
 
         btnrequertReser = (Button) findViewById(R.id.btnrequertReser);
@@ -376,9 +374,9 @@ public class HomeClientActivity extends AppCompatActivity
                 HomeClientActivity.ReservationName = String.valueOf(str);
                 Log.d(TAG,str);
 
-                }
+            }
 
-            });
+        });
 
 
         autoCompView2 = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView2);
@@ -487,7 +485,7 @@ public class HomeClientActivity extends AppCompatActivity
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal){
                 //Display the newly selected value from picker
-               isFleetTravelAssistance = newVal;
+                isFleetTravelAssistance = newVal;
             }
         });
 
@@ -583,7 +581,7 @@ public class HomeClientActivity extends AppCompatActivity
     public void  _setEditPlaceHolder()
     {
 
-         autocompleteFragment = (PlaceAutocompleteFragment)
+        autocompleteFragment = (PlaceAutocompleteFragment)
                 getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
 
         autocompleteFragment.setHint("A Donde Vas?");
@@ -636,43 +634,43 @@ public class HomeClientActivity extends AppCompatActivity
 
 
 
-                GsonBuilder builder = new GsonBuilder();
-                Gson gson = builder.create();
-                System.out.println(gson.toJson(travel));
+            GsonBuilder builder = new GsonBuilder();
+            Gson gson = builder.create();
+            System.out.println(gson.toJson(travel));
 
-                Call<Double> call = null;
-                call = this.daoTravel.amountStimate(travel);
-
-
-                Log.d("Response request", call.request().toString());
-                Log.d("Response request header", call.request().headers().toString());
+            Call<Double> call = null;
+            call = this.daoTravel.amountStimate(travel);
 
 
-                call.enqueue(new Callback<Double>() {
-                    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-                    @Override
-                    public void onResponse(Call<Double> call, Response<Double> response) {
-                        Log.d("Response raw header", response.headers().toString());
-                        Log.d("Response raw", String.valueOf(response.raw().body()));
-                        Log.d("Response code", String.valueOf(response.code()));
-
-                        TextView  txtdistanceTravel= (TextView) findViewById(R.id.distanceTravel);
-                        txtdistanceTravel.setText(String.valueOf(distanceTravel)+"Km");
-
-                        TextView  txtamountEstimate= (TextView) findViewById(R.id.amountEstimate);
-                        amountStimate = (Double) response.body();
-                        txtamountEstimate.setText("$"+String.valueOf(amountStimate));
+            Log.d("Response request", call.request().toString());
+            Log.d("Response request header", call.request().headers().toString());
 
 
+            call.enqueue(new Callback<Double>() {
+                @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                @Override
+                public void onResponse(Call<Double> call, Response<Double> response) {
+                    Log.d("Response raw header", response.headers().toString());
+                    Log.d("Response raw", String.valueOf(response.raw().body()));
+                    Log.d("Response code", String.valueOf(response.code()));
+
+                    TextView  txtdistanceTravel= (TextView) findViewById(R.id.distanceTravel);
+                    txtdistanceTravel.setText(String.valueOf(distanceTravel)+"Km");
+
+                    TextView  txtamountEstimate= (TextView) findViewById(R.id.amountEstimate);
+                    amountStimate = (Double) response.body();
+                    txtamountEstimate.setText("$"+String.valueOf(amountStimate));
 
 
-                    }
 
-                    public void onFailure(Call<Double> call, Throwable t) {
-                        Snackbar.make(findViewById(android.R.id.content),
-                                "ERROR (" + t.getMessage() + ")", Snackbar.LENGTH_LONG).show();
-                    }
-                });
+
+                }
+
+                public void onFailure(Call<Double> call, Throwable t) {
+                    Snackbar.make(findViewById(android.R.id.content),
+                            "ERROR (" + t.getMessage() + ")", Snackbar.LENGTH_LONG).show();
+                }
+            });
 
         } finally {
             this.daoTravel = null;
@@ -793,7 +791,7 @@ public class HomeClientActivity extends AppCompatActivity
 
         if(currentTravel !=  null) {
             currentTravel = gloval.getGv_travel_current();
-           // controlViewTravel();
+            // controlViewTravel();
         }
     }
 
@@ -825,7 +823,7 @@ public class HomeClientActivity extends AppCompatActivity
         // attaching data adapter to spinner
         spinner2.setAdapter(dataAdapter);
 
-          /*MULTI AUTO COMPLETE*/
+        /*MULTI AUTO COMPLETE*/
         /* ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                  android.R.layout.simple_dropdown_item_1line, VEHYCLETYPE);
          AutoCompleteTextView textView = (AutoCompleteTextView) findViewById(R.id.txtCatVehicleReervation);
@@ -866,7 +864,7 @@ public class HomeClientActivity extends AppCompatActivity
             // attaching data adapter to spinner
             spinner.setAdapter(dataAdapter);
 
-          /*MULTI AUTO COMPLETE*/
+            /*MULTI AUTO COMPLETE*/
         /* ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                  android.R.layout.simple_dropdown_item_1line, VEHYCLETYPE);
          AutoCompleteTextView textView = (AutoCompleteTextView) findViewById(R.id.txtCatVehicleReervation);
@@ -916,8 +914,8 @@ public class HomeClientActivity extends AppCompatActivity
         thread.start();*/
 
 
-       // if(adapterView.getAdapter().getClass().getName()
-       //         == "com.apreciasoft.admin.asremis.Util.GooglePlacesAutocompleteAdapter")// GOOGLE PLACE
+        // if(adapterView.getAdapter().getClass().getName()
+        //         == "com.apreciasoft.admin.asremis.Util.GooglePlacesAutocompleteAdapter")// GOOGLE PLACE
         //{
 
        /* Log.d("form", String.valueOf(view.getId()));
@@ -934,10 +932,10 @@ public class HomeClientActivity extends AppCompatActivity
 
 
 
-            //  Log.d("lopo",GooglePlacesAutocompleteAdapter.getItemByIndex(position).toString());
-            // this.location = String.valueOf(GooglePlacesAutocompleteAdapter.getItemByIndex(position));
-            // this.location = String.valueOf(adapterView.getAdapter().getClass().getName();
-       // }
+        //  Log.d("lopo",GooglePlacesAutocompleteAdapter.getItemByIndex(position).toString());
+        // this.location = String.valueOf(GooglePlacesAutocompleteAdapter.getItemByIndex(position));
+        // this.location = String.valueOf(adapterView.getAdapter().getClass().getName();
+        // }
 
 
     }
@@ -1239,7 +1237,7 @@ public class HomeClientActivity extends AppCompatActivity
 
                     try {
 
-                            ReportarByCliet();
+                        ReportarByCliet();
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -1282,9 +1280,9 @@ public class HomeClientActivity extends AppCompatActivity
             reporte datos = new reporte(id,nombre,correo,correo2,razon,company,mensaje,istravel);
 
             /*esto imprime el json quue se va a amandar prueba*/
-             GsonBuilder builder = new GsonBuilder();
-             Gson gson = builder.create();
-             System.out.println(gson.toJson(datos));
+            GsonBuilder builder = new GsonBuilder();
+            Gson gson = builder.create();
+            System.out.println(gson.toJson(datos));
 
             Call<reporte> call = this.daoLoguin.reporteFalla(datos);
 
@@ -1295,11 +1293,11 @@ public class HomeClientActivity extends AppCompatActivity
                 @Override
                 public void onResponse(Call<reporte> call, Response<reporte> response) {
 
-                        reporte rs = response.body();
+                    reporte rs = response.body();
 
-                        Toast.makeText(getApplicationContext(), "Datos Enviados", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Datos Enviados", Toast.LENGTH_SHORT).show();
 
-                        loading.dismiss();
+                    loading.dismiss();
 
                 }
 
@@ -1640,10 +1638,10 @@ public class HomeClientActivity extends AppCompatActivity
 
             Call<InfoTravelEntity> call = null;
             if(gloval.getGv_id_profile() == 2){
-                 call = this.daoTravel.getCurrentTravelByIdClient(gloval.getGv_id_cliet());
+                call = this.daoTravel.getCurrentTravelByIdClient(gloval.getGv_id_cliet());
 
             }else  if (gloval.getGv_id_profile() == 5){
-                 call = this.daoTravel.getCurrentTravelByIdUserCompany(gloval.getGv_user_id());
+                call = this.daoTravel.getCurrentTravelByIdUserCompany(gloval.getGv_user_id());
             }
 
 
@@ -1693,7 +1691,7 @@ public class HomeClientActivity extends AppCompatActivity
 
             Log.d("VIAJE PASO", String.valueOf(gloval.getGv_travel_current()));
 
-          //  cliaerNotificationAndoid();
+            //  cliaerNotificationAndoid();
             currentTravel = gloval.getGv_travel_current();
 
             if (currentTravel != null) {
@@ -1739,21 +1737,21 @@ public class HomeClientActivity extends AppCompatActivity
                         //Toast.makeText(getApplicationContext(), "Viaje Finalizado, Gracias por Preferirnos", Toast.LENGTH_SHORT).show();
 
 
-                            Log.d("start", String.valueOf(currentTravel.start));
+                        Log.d("start", String.valueOf(currentTravel.start));
 
-                            if(currentTravel.start == 0) {
+                        if(currentTravel.start == 0) {
 
-                                this.ShowDialogStarts();
-                            }else
-                            {
-                                currentTravel = null;
-                                materialDesignFAM.setVisibility(View.VISIBLE);
-                                gloval.setGv_travel_current(null);
-                                HomeClientFragment.clearInfo();
-                            }
+                            this.ShowDialogStarts();
+                        }else
+                        {
+                            currentTravel = null;
+                            materialDesignFAM.setVisibility(View.VISIBLE);
+                            gloval.setGv_travel_current(null);
+                            HomeClientFragment.clearInfo();
+                        }
 
 
-                            gloval.setLocationDriverFromClient(null);
+                        gloval.setLocationDriverFromClient(null);
 
 
 
@@ -1824,57 +1822,57 @@ public class HomeClientActivity extends AppCompatActivity
                 } else if (currentTravel.getIdSatatusTravel() == 1 ) {
 
 
-                       activeGif(false, "");
+                    activeGif(false, "");
 
-                       final int idTravel = currentTravel.getIdTravel();
+                    final int idTravel = currentTravel.getIdTravel();
 
-                       if (currentTravel.getIdTypeTravelKf() == 1) //VIAJE
-                       {
-                           AlertDialog alertDialog = new AlertDialog.Builder(HomeClientActivity.this).create();
-                           alertDialog.setTitle("Viaje Aceptado");
-                           alertDialog.setCancelable(false);
-                           alertDialog.setMessage("El Viaje  (" + currentTravel.getCodTravel() + ") ha sido aceptado por la Agencia!.. y se le asignara un chofer de inmediato..!, ");
-                           alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                                   new DialogInterface.OnClickListener() {
-                                       public void onClick(DialogInterface dialog, int which) {
-                                           dialog.dismiss();
-                                       }
-                                   });
-                           alertDialog.show();
+                    if (currentTravel.getIdTypeTravelKf() == 1) //VIAJE
+                    {
+                        AlertDialog alertDialog = new AlertDialog.Builder(HomeClientActivity.this).create();
+                        alertDialog.setTitle("Viaje Aceptado");
+                        alertDialog.setCancelable(false);
+                        alertDialog.setMessage("El Viaje  (" + currentTravel.getCodTravel() + ") ha sido aceptado por la Agencia!.. y se le asignara un chofer de inmediato..!, ");
+                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        alertDialog.show();
 
-                           materialDesignFAM.setVisibility(View.INVISIBLE);
-                           HomeClientFragment.setInfoTravel(currentTravel);
-                       } else {
+                        materialDesignFAM.setVisibility(View.INVISIBLE);
+                        HomeClientFragment.setInfoTravel(currentTravel);
+                    } else {
 
-                           if(currentTravel.getIsConfirTravelAppFromWeb() == 1) {
+                        if(currentTravel.getIsConfirTravelAppFromWeb() == 1) {
 
-                               AlertDialog alertDialog = new AlertDialog.Builder(HomeClientActivity.this).create();
-                               alertDialog.setTitle("Reserva aceptada");
-                               alertDialog.setCancelable(false);
-                               alertDialog.setMessage("Su reserva (" + currentTravel.getCodTravel() + ") ha sido aceptada con éxito ");
-                               alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                                       new DialogInterface.OnClickListener() {
-                                           public void onClick(DialogInterface dialog, int which) {
-                                               confirmAceptaByClient(idTravel);
-                                               dialog.dismiss();
-                                           }
-                                       });
-                               alertDialog.show();
-                               currentTravel = null;
-                               gloval.setGv_travel_current(null);
-                               HomeClientFragment.clearInfo();
-                           }
-                           else {
-                               materialDesignFAM.setVisibility(View.VISIBLE);
-                               currentTravel = null;
-                               materialDesignFAM.setVisibility(View.VISIBLE);
-                               gloval.setGv_travel_current(null);
-                               HomeClientFragment.clearInfo();
-                               activeGif(false, "");
-                           }
+                            AlertDialog alertDialog = new AlertDialog.Builder(HomeClientActivity.this).create();
+                            alertDialog.setTitle("Reserva aceptada");
+                            alertDialog.setCancelable(false);
+                            alertDialog.setMessage("Su reserva (" + currentTravel.getCodTravel() + ") ha sido aceptada con éxito ");
+                            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            confirmAceptaByClient(idTravel);
+                                            dialog.dismiss();
+                                        }
+                                    });
+                            alertDialog.show();
+                            currentTravel = null;
+                            gloval.setGv_travel_current(null);
+                            HomeClientFragment.clearInfo();
+                        }
+                        else {
+                            materialDesignFAM.setVisibility(View.VISIBLE);
+                            currentTravel = null;
+                            materialDesignFAM.setVisibility(View.VISIBLE);
+                            gloval.setGv_travel_current(null);
+                            HomeClientFragment.clearInfo();
+                            activeGif(false, "");
+                        }
 
 
-                       }
+                    }
 
 
 
@@ -2040,100 +2038,100 @@ public class HomeClientActivity extends AppCompatActivity
 
 
                 call.enqueue(new Callback<resp>() {
-                @Override
-                public void onResponse(Call<resp> call, Response<resp> response) {
-                    loading.dismiss();
+                    @Override
+                    public void onResponse(Call<resp> call, Response<resp> response) {
+                        loading.dismiss();
 
-                    Log.d("Response raw header", response.headers().toString());
-                    Log.d("Response raw", String.valueOf(response.raw().body()));
-                    Log.d("Response code", String.valueOf(response.code()));
-
-
-                    if (response.code() == 200) {
-
-                        resp responseBody = (resp) response.body();
-                        String responseBodyString = responseBody.getResponse().toString();
-
-                        if (isReervation) {
-                            Toast.makeText(getApplicationContext(), "Reserva Solicitada!", Toast.LENGTH_SHORT).show();
-                            activeGif(false, "");
-                            location = "";
-                            destination = "";
+                        Log.d("Response raw header", response.headers().toString());
+                        Log.d("Response raw", String.valueOf(response.raw().body()));
+                        Log.d("Response code", String.valueOf(response.code()));
 
 
+                        if (response.code() == 200) {
+
+                            resp responseBody = (resp) response.body();
+                            String responseBodyString = responseBody.getResponse().toString();
+
+                            if (isReervation) {
+                                Toast.makeText(getApplicationContext(), "Reserva Solicitada!", Toast.LENGTH_SHORT).show();
+                                activeGif(false, "");
+                                location = "";
+                                destination = "";
+
+
+
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Viaje Solicitado!", Toast.LENGTH_SHORT).show();
+                                activeGif(true, "Buscando Chofer...");
+                            }
+
+                            materialDesignFAM.close(true);
+
+                            LinearLayout contentInfoReervation = (LinearLayout) findViewById(R.id.contentInfoReervation);
+                            contentInfoReervation.setVisibility(LinearLayout.INVISIBLE);
+                            isReervation = false;
+                            contetRequestTravelVisible(false);
+                            btnrequertReser.setEnabled(true);
+                            btnrequetTravelNow.setEnabled(true);
 
                         } else {
-                            Toast.makeText(getApplicationContext(), "Viaje Solicitado!", Toast.LENGTH_SHORT).show();
-                            activeGif(true, "Buscando Chofer...");
+
+                            AlertDialog alertDialog = new AlertDialog.Builder(HomeClientActivity.this).create();
+                            alertDialog.setTitle("ERROR" + "(" + response.code() + ")");
+                            alertDialog.setMessage(response.errorBody().source().toString());
+                            btnrequertReser.setEnabled(true);
+                            btnrequetTravelNow.setEnabled(true);
+
+
+                            Log.w("***", response.errorBody().source().toString());
+
+
+                            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                            alertDialog.show();
+
                         }
 
-                        materialDesignFAM.close(true);
-
-                        LinearLayout contentInfoReervation = (LinearLayout) findViewById(R.id.contentInfoReervation);
-                        contentInfoReervation.setVisibility(LinearLayout.INVISIBLE);
-                        isReervation = false;
-                        contetRequestTravelVisible(false);
-                        btnrequertReser.setEnabled(true);
-                        btnrequetTravelNow.setEnabled(true);
-
-                    } else {
-
-                        AlertDialog alertDialog = new AlertDialog.Builder(HomeClientActivity.this).create();
-                        alertDialog.setTitle("ERROR" + "(" + response.code() + ")");
-                        alertDialog.setMessage(response.errorBody().source().toString());
-                        btnrequertReser.setEnabled(true);
-                        btnrequetTravelNow.setEnabled(true);
-
-
-                        Log.w("***", response.errorBody().source().toString());
-
-
-                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                });
-                        alertDialog.show();
 
                     }
 
+                    @Override
+                    public void onFailure(Call<resp> call, Throwable t) {
+                        loading.dismiss();
 
-                }
-
-                @Override
-                public void onFailure(Call<resp> call, Throwable t) {
-                    loading.dismiss();
-
-                    Snackbar.make(findViewById(android.R.id.content),
-                            "ERROR ("+t.getMessage()+")", Snackbar.LENGTH_LONG).show();
-                    btnrequertReser.setEnabled(true);
-                    btnrequetTravelNow.setEnabled(true);
+                        Snackbar.make(findViewById(android.R.id.content),
+                                "ERROR ("+t.getMessage()+")", Snackbar.LENGTH_LONG).show();
+                        btnrequertReser.setEnabled(true);
+                        btnrequetTravelNow.setEnabled(true);
 
 
-                }
-            });
+                    }
+                });
 
-             }
+            }
 
-            } finally{
-                this.daoTravel = null;
-                fromDateEtxt.setText("");
-                fromTimeEtxt.setText("");
-                autoCompView.setText("");
-                autoCompView2.setText("");
-                autocompleteFragment.setText("");
-                isFly.setChecked(false);
-                isFleetTravel.setChecked(false);
-                hoursAribo.setText("");
-                terminal.setText("");
-                airlineCompany.setText("");
-                flyNumber.setText("");
-                LinearLayout viewFly = (LinearLayout) findViewById(R.id.content_fly);
-                viewFly.setVisibility(View.GONE);
-                np.setValue(0);
-                LinearLayout viewFlete = (LinearLayout) findViewById(R.id.content_flete);
-                viewFlete.setVisibility(View.GONE);
+        } finally{
+            this.daoTravel = null;
+            fromDateEtxt.setText("");
+            fromTimeEtxt.setText("");
+            autoCompView.setText("");
+            autoCompView2.setText("");
+            autocompleteFragment.setText("");
+            isFly.setChecked(false);
+            isFleetTravel.setChecked(false);
+            hoursAribo.setText("");
+            terminal.setText("");
+            airlineCompany.setText("");
+            flyNumber.setText("");
+            LinearLayout viewFly = (LinearLayout) findViewById(R.id.content_fly);
+            viewFly.setVisibility(View.GONE);
+            np.setValue(0);
+            LinearLayout viewFlete = (LinearLayout) findViewById(R.id.content_flete);
+            viewFlete.setVisibility(View.GONE);
 
 
         }
@@ -2311,7 +2309,7 @@ public class HomeClientActivity extends AppCompatActivity
     // interfaz de ptro metodo de la actividad
     @Override
     public void doSomething() {
-            serviceAllTravel();
+        serviceAllTravel();
     }
 
     public class DowloadImg extends AsyncTask<String, Void, Bitmap> {
@@ -2472,7 +2470,7 @@ public class HomeClientActivity extends AppCompatActivity
                         materialDesignFAM.setVisibility(View.VISIBLE);
                         gloval.setGv_travel_current(null);
                         HomeClientFragment.clearInfo();
-                       // HomeClientFragment.timerblink.cancel();
+                        // HomeClientFragment.timerblink.cancel();
 
                     }
 
@@ -2487,7 +2485,7 @@ public class HomeClientActivity extends AppCompatActivity
             } finally {
                 this.daoTravel = null;
             }
-}
+        }
 
     }
 

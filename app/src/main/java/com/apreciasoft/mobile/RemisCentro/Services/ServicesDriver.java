@@ -13,9 +13,7 @@ import com.apreciasoft.mobile.RemisCentro.Entity.fleetType;
 import com.apreciasoft.mobile.RemisCentro.Entity.modelEntity;
 import com.apreciasoft.mobile.RemisCentro.Entity.resp;
 import com.apreciasoft.mobile.RemisCentro.Entity.responseFilterVehicle;
-
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;

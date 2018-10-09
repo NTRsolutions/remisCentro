@@ -1,9 +1,8 @@
-package com.apreciasoft.mobile.RemisCentro.Fracments;
+package com.apreciasoft.mobile.RemisCentro.Fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-
 import com.apreciasoft.mobile.RemisCentro.R;
 
 /**

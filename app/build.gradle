@@ -38,8 +38,8 @@ android {
         applicationId 'com.apreciasoft.mobile.RemisCentro'
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 17
-        versionName "2.0.17"
+        versionCode 16
+        versionName "2.0.16"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled = true
         vectorDrawables.useSupportLibrary = true

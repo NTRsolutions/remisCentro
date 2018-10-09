@@ -19,7 +19,6 @@ import java.util.List;
  */
 
 
-
 public class AdapterRows extends RecyclerView.Adapter<AdapterRows.ViewHolder> {
     private List<LiquidationEntity> mDataset;
 
@@ -99,7 +98,7 @@ public class AdapterRows extends RecyclerView.Adapter<AdapterRows.ViewHolder> {
         PopupMenu popup = new PopupMenu(view.getContext(),view );
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.liquidationcarview, popup.getMenu());
-       // popup.setOnMenuItemClickListener(new MyMenuItemClickListener(position));
+        // popup.setOnMenuItemClickListener(new MyMenuItemClickListener(position));
         popup.show();
     }
 
@@ -107,11 +106,6 @@ public class AdapterRows extends RecyclerView.Adapter<AdapterRows.ViewHolder> {
     public int getItemCount() {
         return mDataset.size();
     }
-
-
-
-
-
 
 }
 

@@ -1,7 +1,7 @@
 package com.apreciasoft.mobile.RemisCentro.Entity;
 
-import com.google.gson.annotations.SerializedName;
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by jorge gutierrez on 13/04/2017.

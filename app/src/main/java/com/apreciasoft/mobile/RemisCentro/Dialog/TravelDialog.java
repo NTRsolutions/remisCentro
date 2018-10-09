@@ -9,7 +9,6 @@ import android.widget.Button;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
-
 import com.apreciasoft.mobile.RemisCentro.Activity.HomeActivity;
 import com.apreciasoft.mobile.RemisCentro.Adapter.CustomExpandableListAdapter;
 import com.apreciasoft.mobile.RemisCentro.Entity.InfoTravelEntity;
@@ -17,7 +16,6 @@ import com.apreciasoft.mobile.RemisCentro.R;
 import com.apreciasoft.mobile.RemisCentro.Util.ExpandableListDataPump;
 import com.apreciasoft.mobile.RemisCentro.Util.GlovalVar;
 import com.apreciasoft.mobile.RemisCentro.Util.Utils;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -126,7 +124,7 @@ public class TravelDialog extends DialogFragment {
         }
 
 
-       txt_observation.setText(currentTravel.getObservationFromDriver());
+        txt_observation.setText(currentTravel.getObservationFromDriver());
 
         final Button btnRefut = (Button) rootView.findViewById(R.id.btn_refut);
 
@@ -183,7 +181,7 @@ public class TravelDialog extends DialogFragment {
             }
         });
 
-      //****************//
+        //****************//
 
            /*
         MULTI DESTINO
@@ -220,10 +218,10 @@ public class TravelDialog extends DialogFragment {
         expandableListView3 = (ExpandableListView) rootView.findViewById(R.id.expandableListView3);
 
         List<String> subItem3 = new ArrayList<String>();
-        if(currentTravel.getOriginMultipleDesc1() != ""){subItem3.add(currentTravel.getOriginMultipleDesc1());}
-        if(currentTravel.getOriginMultipleDesc2() != ""){subItem3.add(currentTravel.getOriginMultipleDesc2());}
-        if(currentTravel.getOriginMultipleDesc3() != ""){subItem3.add(currentTravel.getOriginMultipleDesc3());}
-        if(currentTravel.getOriginMultipleDesc4() != ""){subItem3.add(currentTravel.getOriginMultipleDesc4());}
+        if(!currentTravel.getOriginMultipleDesc1().equals("")){subItem3.add(currentTravel.getOriginMultipleDesc1());}
+        if(!currentTravel.getOriginMultipleDesc2().equals("")){subItem3.add(currentTravel.getOriginMultipleDesc2());}
+        if(!currentTravel.getOriginMultipleDesc3().equals("")){subItem3.add(currentTravel.getOriginMultipleDesc3());}
+        if(!currentTravel.getOriginMultipleDesc4().equals("")){subItem3.add(currentTravel.getOriginMultipleDesc4());}
 
 
         expandableListDetail3 = ExpandableListDataPump.getData("Multi Origen",subItem3);

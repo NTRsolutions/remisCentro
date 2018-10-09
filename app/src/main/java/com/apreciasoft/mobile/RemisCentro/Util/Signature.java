@@ -21,9 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
 import com.apreciasoft.mobile.RemisCentro.R;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;

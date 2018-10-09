@@ -1,4 +1,4 @@
-package com.apreciasoft.mobile.RemisCentro.Fracments;
+package com.apreciasoft.mobile.RemisCentro.Fragments;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -26,7 +26,6 @@ import com.mercadopago.model.Item;
 import com.mercadopago.model.PaymentData;
 import com.mercadopago.preferences.CheckoutPreference;
 import com.mercadopago.util.JsonUtil;
-
 import java.math.BigDecimal;
 import java.util.List;
 

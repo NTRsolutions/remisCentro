@@ -1,4 +1,5 @@
-package com.apreciasoft.mobile.RemisCentro.Fracments;
+package com.apreciasoft.mobile.RemisCentro.Fragments;
+
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,16 +15,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.apreciasoft.mobile.RemisCentro.Activity.HomeActivity;
 import com.apreciasoft.mobile.RemisCentro.Entity.InfoTravelEntity;
 import com.apreciasoft.mobile.RemisCentro.Http.HttpConexion;
 import com.apreciasoft.mobile.RemisCentro.R;
 import com.apreciasoft.mobile.RemisCentro.Services.ServicesTravel;
 import com.apreciasoft.mobile.RemisCentro.Util.GlovalVar;
-
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -35,7 +33,6 @@ import retrofit2.Response;
 public class InfoDetailTravelAc extends AppCompatActivity {
 
 
-
     ServicesTravel apiService = null;
     public Button button1 = null;
     public Button bt_confirmar_reserva = null;
@@ -43,8 +40,6 @@ public class InfoDetailTravelAc extends AppCompatActivity {
     public ServicesTravel daoTravel = null;
     public GlovalVar gloval;
     public ProgressDialog loading;
-
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

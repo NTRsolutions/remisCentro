@@ -1,4 +1,4 @@
-package com.apreciasoft.mobile.RemisCentro.Fracments;
+package com.apreciasoft.mobile.RemisCentro.Fragments;
 
 import android.app.DialogFragment;
 import android.os.Bundle;
@@ -8,11 +8,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-
 import com.apreciasoft.mobile.RemisCentro.Entity.VehicleType;
 import com.apreciasoft.mobile.RemisCentro.R;
 import com.apreciasoft.mobile.RemisCentro.Util.GlovalVar;
-
 import java.util.ArrayList;
 import java.util.List;
 

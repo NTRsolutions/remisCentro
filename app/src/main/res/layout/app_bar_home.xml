@@ -22,18 +22,13 @@
 
     </android.support.design.widget.AppBarLayout>
 
-
-
     <include layout="@layout/content_home"/>
-
-
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:baselineAligned="false"
-
         android:layout_gravity="bottom|end"
         android:layout_weight="0.35">
         <RelativeLayout
@@ -57,16 +52,12 @@
                 app:layout_anchorGravity="bottom|left"
                 android:drawableLeft="@drawable/ic_phonelink_erase_black_24dp" />
 
-
-
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1">
-
-
             <Button
                 android:id="@+id/btn_init"
                 android:padding="4dp"
@@ -82,8 +73,6 @@
                 android:text="INICIAR"
                 app:layout_anchorGravity="bottom|left"
                 android:drawableLeft="@drawable/ic_nature_people_black_24dp" />
-
-
 
         </RelativeLayout>
 

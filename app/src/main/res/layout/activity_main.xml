@@ -8,15 +8,14 @@
     android:layout_height="match_parent"
     tools:context="com.apreciasoft.mobile.RemisCentro.Activity.MainActivity">
 
-
-
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:scaleType="centerCrop"
         android:src="@drawable/fondo"
-        android:alpha=".85" />
+        android:alpha=".85"
+        tools:ignore="ContentDescription" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -36,15 +35,10 @@
             android:layout_gravity="center"
             android:layout_margin="50dp"
             android:layout_height="130dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentStart="true"
             android:src="@drawable/logo"
             app:civ_fill_color="@color/blanco"
             app:civ_border_color="@color/colorPrimaryDark"
             app:civ_border_width="2dp" />
-
 
         <EditText
             android:id="@+id/user_txt"
@@ -92,12 +86,7 @@
             android:textColor="@color/whithe"
             app:backgroundTint="@color/colorPrimary" />
 
-
-
-
-
     </LinearLayout>
-
 
     <LinearLayout
         android:paddingLeft="20dp"
@@ -153,7 +142,8 @@
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom|center"
         android:layout_marginTop="75dp"
-        app:srcCompat="@mipmap/amazon" />
+        app:srcCompat="@mipmap/amazon"
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/lbl_version"
@@ -166,7 +156,6 @@
         android:layout_alignParentRight="true"
         android:layout_gravity="bottom|right"
         android:text="0.0.0" />
-
 
 </RelativeLayout>
 

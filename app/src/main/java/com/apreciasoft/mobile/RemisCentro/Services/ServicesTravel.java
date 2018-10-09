@@ -9,9 +9,7 @@ import com.apreciasoft.mobile.RemisCentro.Entity.paramEntity;
 import com.apreciasoft.mobile.RemisCentro.Entity.reasonEntity;
 import com.apreciasoft.mobile.RemisCentro.Entity.resp;
 import com.apreciasoft.mobile.RemisCentro.Entity.valuesTravelPreview;
-
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -55,22 +53,22 @@ public interface ServicesTravel {
 
     @Headers("Content-Type: application/json")
     @GET("travel/isRoundTrip/{id}")
-    Call<Boolean> isRoundTrip(@Path("id")  int id);
+    Call<Boolean> isRoundTrip(@Path("id") int id);
 
     @Headers("Content-Type: application/json")
     @GET("travel/verifickTravelFinish/{id}")
-    Call<Boolean> verifickTravelFinish(@Path("id")  int id);
+    Call<Boolean> verifickTravelFinish(@Path("id") int id);
 
     @Headers("Content-Type: application/json")
     @GET("travel/verifickTravelCancel/{id}")
-    Call<Boolean> verifickTravelCancel(@Path("id")  int id);
+    Call<Boolean> verifickTravelCancel(@Path("id") int id);
 
 
 
 
     @Headers("Content-Type: application/json")
     @GET("travel/isWait/{id}/{value}")
-    Call<Boolean> isWait(@Path("id")  int id,@Path("value")  int value);
+    Call<Boolean> isWait(@Path("id") int id, @Path("value") int value);
 
     @Headers("Content-Type: application/json")
     @GET("travel/confirmCancelByClient/{id}")
@@ -82,7 +80,7 @@ public interface ServicesTravel {
 
     @Headers("Content-Type: application/json")
     @GET("travel/calificateDriver/{idTravel}/{start}")
-    Call<Boolean> calificateDriver(@Path("idTravel") int idTravel,@Path("start") int start);
+    Call<Boolean> calificateDriver(@Path("idTravel") int idTravel, @Path("start") int start);
 
     @Headers("Content-Type: application/json")
     @GET("travel/confirmCancelByDriver/{id}")
@@ -90,11 +88,11 @@ public interface ServicesTravel {
 
     @Headers("Content-Type: application/json")
     @POST("travel/finishMobil")
-    Call<InfoTravelEntity> finishPost(@Body  TraveInfoSendEntity travel);
+    Call<InfoTravelEntity> finishPost(@Body TraveInfoSendEntity travel);
 
     @Headers("Content-Type: application/json")
     @POST("travel/preFinishMobil")
-    Call<InfoTravelEntity> preFinishMobil(@Body  TraveInfoSendEntity travel);
+    Call<InfoTravelEntity> preFinishMobil(@Body TraveInfoSendEntity travel);
 
     @Headers("Content-Type: application/json")
     @GET("travel/accept/{id}")
@@ -111,20 +109,20 @@ public interface ServicesTravel {
 
     @Headers("Content-Type: application/json")
     @GET("travel/rservations/{idDriver}/{idUserClient}/{idProfileUser}")
-    Call<List<InfoTravelEntity>> getReservations(@Path("idDriver") int idDriver,@Path("idUserClient") int idUserClient,@Path("idProfileUser") int idProfileUser);
+    Call<List<InfoTravelEntity>> getReservations(@Path("idDriver") int idDriver, @Path("idUserClient") int idUserClient, @Path("idProfileUser") int idProfileUser);
 
     @Headers("Content-Type: application/json")
     @GET("travel/readrservations/{id}/{idDriver}")
-    Call<List<InfoTravelEntity>> readReservation(@Path("id") int id,@Path("idDriver") int idDriver);
+    Call<List<InfoTravelEntity>> readReservation(@Path("id") int id, @Path("idDriver") int idDriver);
 
 
     @Headers("Content-Type: application/json")
     @GET("travel/cacelReservation/{id}/{idDriver}")
-    Call<List<InfoTravelEntity>> cacelReservation(@Path("id") int id,@Path("idDriver") int idDriver);
+    Call<List<InfoTravelEntity>> cacelReservation(@Path("id") int id, @Path("idDriver") int idDriver);
 
     @Headers("Content-Type: application/json")
     @GET("travel/cancelByClient/{id}/{idReasonCancelKf}")
-    Call<Boolean> cancelByClient(@Path("id") int id, @Path("idReasonCancelKf") int idReasonCancelKf );
+    Call<Boolean> cancelByClient(@Path("id") int id, @Path("idReasonCancelKf") int idReasonCancelKf);
 
     @Headers("Content-Type: application/json")
     @GET("travel/reasonForId/{id}")

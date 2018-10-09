@@ -28,7 +28,7 @@ import com.apreciasoft.mobile.RemisCentro.Entity.login;
 import com.apreciasoft.mobile.RemisCentro.Entity.paramEntity;
 import com.apreciasoft.mobile.RemisCentro.Entity.user;
 import com.apreciasoft.mobile.RemisCentro.Entity.userFull;
-import com.apreciasoft.mobile.RemisCentro.Fracments.RegisterForm;
+import com.apreciasoft.mobile.RemisCentro.Fragments.RegisterForm;
 import com.apreciasoft.mobile.RemisCentro.Http.HttpConexion;
 import com.apreciasoft.mobile.RemisCentro.R;
 import com.apreciasoft.mobile.RemisCentro.Services.ServicesLoguin;
@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
     public static final int REGISTER_ACTIVITY = 1;
     public  SharedPreferences.Editor editor;
     public   SharedPreferences pref;
-
 
     @SuppressLint("InvalidWakeLockTag")
     @Override
@@ -346,8 +345,8 @@ public class MainActivity extends AppCompatActivity {
                                     new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
                                             dialog.dismiss();
-                                           // Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-                                             //       Uri.parse("http://as-nube.com/apk.apk"));
+                                            // Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                                            //       Uri.parse("http://as-nube.com/apk.apk"));
                                             //startActivity(browserIntent);
 
                                             final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
@@ -530,7 +529,7 @@ public class MainActivity extends AppCompatActivity {
                                     });
                             alertDialog.show();
                             HttpConexion.setBase(HttpConexion.instance);
-                            }
+                        }
 
 
 
@@ -549,21 +548,21 @@ public class MainActivity extends AppCompatActivity {
                         HttpConexion.setBase(HttpConexion.instance);
 
 
-                }  else if (response.code() == 212)  {
-                    loading.dismiss();
-                    AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-                    alertDialog.setTitle("Informacion");
-                    alertDialog.setMessage("Usuario Inactivado");
-                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            });
-                    alertDialog.show();
+                    }  else if (response.code() == 212)  {
+                        loading.dismiss();
+                        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                        alertDialog.setTitle("Informacion");
+                        alertDialog.setMessage("Usuario Inactivado");
+                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        alertDialog.show();
                         HttpConexion.setBase(HttpConexion.instance);
 
-                }
+                    }
                     else if (response.code() == 400)  {
 
                         loading.dismiss();

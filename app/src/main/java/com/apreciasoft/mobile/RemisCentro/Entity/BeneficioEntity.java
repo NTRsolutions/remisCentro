@@ -2,15 +2,14 @@ package com.apreciasoft.mobile.RemisCentro.Entity;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import java.io.Serializable;
 
+import java.io.Serializable;
 
 /**
  * Created by Jorge on 28/10/17.
  */
 
-
-public  class BeneficioEntity implements Serializable {
+public class BeneficioEntity implements Serializable {
 
 
     @Expose

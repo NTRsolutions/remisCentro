@@ -2,9 +2,7 @@ package com.apreciasoft.mobile.RemisCentro.Util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-
 import com.apreciasoft.mobile.RemisCentro.Http.HttpConexion;
-
 import java.util.Timer;
 import java.util.TimerTask;
 

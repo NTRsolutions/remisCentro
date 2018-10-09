@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.apreciasoft.mobile.RemisCentro.Activity.HomeActivity;
 import com.apreciasoft.mobile.RemisCentro.Entity.InfoTravelEntity;
 import com.apreciasoft.mobile.RemisCentro.R;

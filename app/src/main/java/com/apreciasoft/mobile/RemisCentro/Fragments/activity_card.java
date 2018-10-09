@@ -1,8 +1,7 @@
-package com.apreciasoft.mobile.RemisCentro.Fracments;
+package com.apreciasoft.mobile.RemisCentro.Fragments;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-
 import com.apreciasoft.mobile.RemisCentro.R;
 import com.mercadopago.callbacks.Callback;
 import com.mercadopago.core.MercadoPago;

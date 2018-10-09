@@ -1,14 +1,11 @@
 package com.apreciasoft.mobile.RemisCentro.Util;
 
-
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
-
 import com.apreciasoft.mobile.RemisCentro.Activity.HomeClientActivity;
+import java.util.ArrayList;
 
 /**
  * Created by usario on 26/5/2017.

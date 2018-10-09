@@ -64,14 +64,14 @@ import com.apreciasoft.mobile.RemisCentro.Entity.paramEntity;
 import com.apreciasoft.mobile.RemisCentro.Entity.resp;
 import com.apreciasoft.mobile.RemisCentro.Entity.token;
 import com.apreciasoft.mobile.RemisCentro.Entity.tokenFull;
-import com.apreciasoft.mobile.RemisCentro.Fracments.AcountDriver;
-import com.apreciasoft.mobile.RemisCentro.Fracments.HistoryTravelDriver;
-import com.apreciasoft.mobile.RemisCentro.Fracments.HomeFragment;
-import com.apreciasoft.mobile.RemisCentro.Fracments.NotificationsFrangment;
-import com.apreciasoft.mobile.RemisCentro.Fracments.PaymentCreditCar;
-import com.apreciasoft.mobile.RemisCentro.Fracments.ProfileClientFr;
-import com.apreciasoft.mobile.RemisCentro.Fracments.ProfileDriverFr;
-import com.apreciasoft.mobile.RemisCentro.Fracments.ReservationsFrangment;
+import com.apreciasoft.mobile.RemisCentro.Fragments.AcountDriver;
+import com.apreciasoft.mobile.RemisCentro.Fragments.HistoryTravelDriver;
+import com.apreciasoft.mobile.RemisCentro.Fragments.HomeFragment;
+import com.apreciasoft.mobile.RemisCentro.Fragments.NotificationsFrangment;
+import com.apreciasoft.mobile.RemisCentro.Fragments.PaymentCreditCar;
+import com.apreciasoft.mobile.RemisCentro.Fragments.ProfileClientFr;
+import com.apreciasoft.mobile.RemisCentro.Fragments.ProfileDriverFr;
+import com.apreciasoft.mobile.RemisCentro.Fragments.ReservationsFrangment;
 import com.apreciasoft.mobile.RemisCentro.Http.HttpConexion;
 import com.apreciasoft.mobile.RemisCentro.R;
 import com.apreciasoft.mobile.RemisCentro.Services.ServicesLoguin;
@@ -796,72 +796,72 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void asigndTravelDriver() {
-            loading = ProgressDialog.show(HomeActivity.this, "Verificando Viaje", "Espere unos Segundos...", true, false);
+        loading = ProgressDialog.show(HomeActivity.this, "Verificando Viaje", "Espere unos Segundos...", true, false);
 
 
-            if (!Utils.verificaConexion(this)) {
-                showAlertNoConexion();
-            } else { // VERIFICADOR DE CONEXION
+        if (!Utils.verificaConexion(this)) {
+            showAlertNoConexion();
+        } else { // VERIFICADOR DE CONEXION
 
-                if (this.daoTravel == null) {
-                    this.daoTravel = HttpConexion.getUri().create(ServicesTravel.class);
-                }
-
-
-                try {
-
-
-                    TravelEntity travel = new TravelEntity(new TravelBodyEntity(
-                            gloval.getGv_id_driver(), currentTravel.getIdTravel(), gloval.getGv_user_id()
-                    ));
-
-
-                    Call<InfoTravelEntity> call = this.daoTravel.asigned(travel);
-
-                    Log.d("fatal", call.request().toString());
-                    Log.d("fatal", call.request().headers().toString());
-
-                    call.enqueue(new Callback<InfoTravelEntity>() {
-                        @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-                        @Override
-                        public void onResponse(Call<InfoTravelEntity> call, Response<InfoTravelEntity> response) {
-
-
-                            if (response.code() == 200) {
-                                InfoTravelEntity result = response.body();
-                                loading.cancel();
-                                getCurrentTravelByIdDriver();
-                                verifickTravelCancelInit();
-
-                            } else {
-
-                                AlertDialog alertDialog = new AlertDialog.Builder(HomeActivity.this).create();
-                                alertDialog.setTitle("ERROR" + "(" + response.code() + ")");
-                                alertDialog.setMessage(response.errorBody().source().toString());
-                                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.dismiss();
-                                            }
-                                        });
-                                alertDialog.show();
-
-                            }
-                        }
-
-                        public void onFailure(Call<InfoTravelEntity> call, Throwable t) {
-                            loading.cancel();
-                            Snackbar.make(findViewById(android.R.id.content),
-                                    "ERROR (" + t.getMessage() + ")", Snackbar.LENGTH_LONG).show();
-                        }
-
-                    });
-
-                } finally {
-                    this.daoTravel = null;
-                }
-
+            if (this.daoTravel == null) {
+                this.daoTravel = HttpConexion.getUri().create(ServicesTravel.class);
             }
+
+
+            try {
+
+
+                TravelEntity travel = new TravelEntity(new TravelBodyEntity(
+                        gloval.getGv_id_driver(), currentTravel.getIdTravel(), gloval.getGv_user_id()
+                ));
+
+
+                Call<InfoTravelEntity> call = this.daoTravel.asigned(travel);
+
+                Log.d("fatal", call.request().toString());
+                Log.d("fatal", call.request().headers().toString());
+
+                call.enqueue(new Callback<InfoTravelEntity>() {
+                    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                    @Override
+                    public void onResponse(Call<InfoTravelEntity> call, Response<InfoTravelEntity> response) {
+
+
+                        if (response.code() == 200) {
+                            InfoTravelEntity result = response.body();
+                            loading.cancel();
+                            getCurrentTravelByIdDriver();
+                            verifickTravelCancelInit();
+
+                        } else {
+
+                            AlertDialog alertDialog = new AlertDialog.Builder(HomeActivity.this).create();
+                            alertDialog.setTitle("ERROR" + "(" + response.code() + ")");
+                            alertDialog.setMessage(response.errorBody().source().toString());
+                            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                            alertDialog.show();
+
+                        }
+                    }
+
+                    public void onFailure(Call<InfoTravelEntity> call, Throwable t) {
+                        loading.cancel();
+                        Snackbar.make(findViewById(android.R.id.content),
+                                "ERROR (" + t.getMessage() + ")", Snackbar.LENGTH_LONG).show();
+                    }
+
+                });
+
+            } finally {
+                this.daoTravel = null;
+            }
+
+        }
     }
 
     public boolean checkDistanceSucces() {
@@ -1274,7 +1274,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         if(ServicesSleep.mRunning) {
             btnPreFinish.setEnabled(true);
             btnReturn.setEnabled(true);
-           // btnInitSplep.setBackgroundColor(getResources().getColor(R.color.CLEAR));
+            // btnInitSplep.setBackgroundColor(getResources().getColor(R.color.CLEAR));
 
             stopService(new Intent(this, ServicesSleep.class));
             isWait(1);
@@ -1291,7 +1291,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             btnPreFinish.setEnabled(false);
             btnReturn.setEnabled(false);
             startService(new Intent(this, ServicesSleep.class));
-           // btnInitSplep.setBackgroundColor(getResources().getColor(R.color.succes));
+            // btnInitSplep.setBackgroundColor(getResources().getColor(R.color.succes));
             isWait(0);
             Toast.makeText(getApplicationContext(), "Espera Activada", Toast.LENGTH_LONG).show();
             btnInitSplep.setText("PAUSAR");
@@ -1394,7 +1394,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
     };
 
-// tiempo de espera //
+    // tiempo de espera //
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -1408,7 +1408,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         Log.d(TAG, counter);
         Log.d(TAG, time);
 
-       // TextView txtDateTime = (TextView) findViewById(R.id.txtDateTime);
+        // TextView txtDateTime = (TextView) findViewById(R.id.txtDateTime);
         //TextView txtCounter = (TextView) findViewById(R.id.txtCounter);
         //txtDateTime.setText(time);
         //txtCounter.setText(counter);
@@ -1616,7 +1616,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     if(HomeActivity.isRoundTrip == 1) {
                         Log.d("-TRAVEL amounCalculateGps (7)-", String.valueOf(HomeActivity.isRoundTrip));
                         //if (currentTravel.getIsBenefitKmList() == 1) {
-                            amounCalculateGps = amounCalculateGps + this.getPriceReturnBylistBeneficion(currentTravel.getListBeneficio(), kilometros_vuelta);
+                        amounCalculateGps = amounCalculateGps + this.getPriceReturnBylistBeneficion(currentTravel.getListBeneficio(), kilometros_vuelta);
                         //}
                     }
 
@@ -2469,74 +2469,74 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public  void  verifickTravelCancelInit()
     {
 
-            loading = ProgressDialog.show(HomeActivity.this, "Verificando Viaje", "Espere unos Segundos...", true, false);
+        loading = ProgressDialog.show(HomeActivity.this, "Verificando Viaje", "Espere unos Segundos...", true, false);
 
 
-            if( Utils.verificaConexion(this) == false) {showAlertNoConexion();}else { // VERIFICADOR DE CONEXION
+        if( Utils.verificaConexion(this) == false) {showAlertNoConexion();}else { // VERIFICADOR DE CONEXION
 
-                if (this.daoTravel == null) {
-                    this.daoTravel = HttpConexion.getUri().create(ServicesTravel.class);
-                }
+            if (this.daoTravel == null) {
+                this.daoTravel = HttpConexion.getUri().create(ServicesTravel.class);
+            }
 
-                try {
+            try {
 
-                    if(currentTravel != null) {
+                if(currentTravel != null) {
 
-                        Call<Boolean> call = this.daoTravel.verifickTravelCancel(currentTravel.idTravel);
+                    Call<Boolean> call = this.daoTravel.verifickTravelCancel(currentTravel.idTravel);
 
-                        Log.d("fatal", call.request().toString());
-                        Log.d("fatal", call.request().headers().toString());
+                    Log.d("fatal", call.request().toString());
+                    Log.d("fatal", call.request().headers().toString());
 
-                        call.enqueue(new Callback<Boolean>() {
-                            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-                            @Override
-                            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-                                boolean result = response.body();
-                                if (result) {
-                                    loading.cancel();
-                                    final AlertDialog.Builder dialog = new AlertDialog.Builder(HomeActivity.this);
-                                    dialog.setMessage("Viaje fue Cancelado previamente")
-                                            .setPositiveButton("Continuar", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                                                    fn_refhesh();
-                                                }
-                                            }) ;
-                                    dialog.show();
-                                } else {
-                                    loading.cancel();
-                                    initTravel();// INICIAMOS EL VIAJE
-                                }
-
-                            }
-
-                            public void onFailure(Call<Boolean> call, Throwable t) {
+                    call.enqueue(new Callback<Boolean>() {
+                        @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                        @Override
+                        public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                            boolean result = response.body();
+                            if (result) {
                                 loading.cancel();
-                                Snackbar.make(findViewById(android.R.id.content),
-                                        "ERROR (" + t.getMessage() + ")", Snackbar.LENGTH_LONG).show();
+                                final AlertDialog.Builder dialog = new AlertDialog.Builder(HomeActivity.this);
+                                dialog.setMessage("Viaje fue Cancelado previamente")
+                                        .setPositiveButton("Continuar", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                                                fn_refhesh();
+                                            }
+                                        }) ;
+                                dialog.show();
+                            } else {
+                                loading.cancel();
+                                initTravel();// INICIAMOS EL VIAJE
                             }
 
+                        }
 
-                        });
-                    }else {
+                        public void onFailure(Call<Boolean> call, Throwable t) {
+                            loading.cancel();
+                            Snackbar.make(findViewById(android.R.id.content),
+                                    "ERROR (" + t.getMessage() + ")", Snackbar.LENGTH_LONG).show();
+                        }
 
-                        loading.cancel();
 
-                        final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-                        dialog.setMessage("Viaje ya fue finalizado previamente")
-                                .setPositiveButton("Continuar", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                                        clearFinish();
-                                    }
-                                }) ;
-                        dialog.show();
+                    });
+                }else {
 
-                    }
+                    loading.cancel();
 
-                } finally {
-                    this.daoTravel = null;
+                    final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+                    dialog.setMessage("Viaje ya fue finalizado previamente")
+                            .setPositiveButton("Continuar", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                                    clearFinish();
+                                }
+                            }) ;
+                    dialog.show();
+
                 }
+
+            } finally {
+                this.daoTravel = null;
+            }
         }
     }
 
@@ -3053,10 +3053,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
                             try {
                                 //Getting the Bitmap from Gallery
-                               // bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                                // bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                                 //Setting the Bitmap to ImageView
 
-                                 f=new File(path_image, "asremis.jpg");
+                                f=new File(path_image, "asremis.jpg");
                                 bitmap = BitmapFactory.decodeStream(new FileInputStream(f));
 
                                 postImageData();
@@ -3164,89 +3164,89 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-public class SendPostRequest extends AsyncTask<String, Void, String> {
+    public class SendPostRequest extends AsyncTask<String, Void, String> {
 
-    protected void onPreExecute(){}
+        protected void onPreExecute(){}
 
-    protected String doInBackground(String... arg0) {
+        protected String doInBackground(String... arg0) {
 
-        try {
+            try {
 
-            URL url = new URL(HttpConexion.BASE_URL+"as_mpago/index.php"); // here is your URL path
+                URL url = new URL(HttpConexion.BASE_URL+"as_mpago/index.php"); // here is your URL path
 
-            JSONObject postDataParams = new JSONObject();
-            postDataParams.put("clienteid", HomeActivity.PARAM_69);
-            postDataParams.put("clientesecret", HomeActivity.PARAM_79);
-            postDataParams.put("currency_id", HttpConexion.COUNTRY);
-            postDataParams.put("unit_price", totalFinal);
-            postDataParams.put("agency", gloval.getGv_base_intance());
-            postDataParams.put("idTravel", currentTravel.getIdTravel());
-
-
-            Log.d("postDataParams", String.valueOf(postDataParams));
+                JSONObject postDataParams = new JSONObject();
+                postDataParams.put("clienteid", HomeActivity.PARAM_69);
+                postDataParams.put("clientesecret", HomeActivity.PARAM_79);
+                postDataParams.put("currency_id", HttpConexion.COUNTRY);
+                postDataParams.put("unit_price", totalFinal);
+                postDataParams.put("agency", gloval.getGv_base_intance());
+                postDataParams.put("idTravel", currentTravel.getIdTravel());
 
 
-
-            String message = postDataParams.toString();
-
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(15000 /* milliseconds */);
-            conn.setConnectTimeout(15000 /* milliseconds */);
-            conn.setRequestMethod("POST");
-            conn.setDoInput(true);
-            conn.setDoOutput(true);
-            conn.setRequestProperty("Content-Type", "application/json");
-            conn.setRequestProperty("Accept", "application/json");
-            conn.setFixedLengthStreamingMode(message.getBytes().length);
+                Log.d("postDataParams", String.valueOf(postDataParams));
 
 
 
-            OutputStream os = conn.getOutputStream();
-            BufferedWriter writer = new BufferedWriter(
-                    new OutputStreamWriter(os, "UTF-8"));
+                String message = postDataParams.toString();
 
-            writer.write(message);
-            writer.flush();
-            writer.close();
-            os.close();
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(15000 /* milliseconds */);
+                conn.setConnectTimeout(15000 /* milliseconds */);
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setRequestProperty("Accept", "application/json");
+                conn.setFixedLengthStreamingMode(message.getBytes().length);
 
-            int responseCode=conn.getResponseCode();
 
-            if (responseCode == HttpsURLConnection.HTTP_OK) {
 
-                InputStream inputStream = conn.getInputStream();
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"));
-                StringBuilder response = new StringBuilder();
-                String line = "";
-                while ((line = bufferedReader.readLine())!=null){
-                    response.append(line);
-                }
+                OutputStream os = conn.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(
+                        new OutputStreamWriter(os, "UTF-8"));
 
-                bufferedReader.close();
-                inputStream.close();
-                conn.disconnect();
+                writer.write(message);
+                writer.flush();
+                writer.close();
                 os.close();
-                return response.toString();
 
+                int responseCode=conn.getResponseCode();
+
+                if (responseCode == HttpsURLConnection.HTTP_OK) {
+
+                    InputStream inputStream = conn.getInputStream();
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"));
+                    StringBuilder response = new StringBuilder();
+                    String line = "";
+                    while ((line = bufferedReader.readLine())!=null){
+                        response.append(line);
+                    }
+
+                    bufferedReader.close();
+                    inputStream.close();
+                    conn.disconnect();
+                    os.close();
+                    return response.toString();
+
+                }
+                else {
+                    return "false : " + responseCode;
+                }
             }
-            else {
-                return "false : " + responseCode;
+            catch(Exception e){
+                return "Exception: " + e.getMessage();
             }
-        }
-        catch(Exception e){
-            return "Exception: " + e.getMessage();
+
         }
 
+        @Override
+        protected void onPostExecute(String result) {
+            loading.dismiss();
+            Intent intent = new Intent(getApplicationContext(), PaymentCreditCar.class);
+            HomeActivity.mp_jsonPaymentCard = result;
+            startActivityForResult(intent, CREDIT_CAR_ACTIVITY);
+        }
     }
-
-    @Override
-    protected void onPostExecute(String result) {
-        loading.dismiss();
-        Intent intent = new Intent(getApplicationContext(), PaymentCreditCar.class);
-        HomeActivity.mp_jsonPaymentCard = result;
-        startActivityForResult(intent, CREDIT_CAR_ACTIVITY);
-    }
-}
 
     public void postImageData()
     {
@@ -3582,4 +3582,5 @@ public class SendPostRequest extends AsyncTask<String, Void, String> {
         }
     }
 }
+
 

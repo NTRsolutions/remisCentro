@@ -18,11 +18,11 @@
 
     <LinearLayout
         android:id="@+id/canvas_sign"
-        android:layout_gravity="center"
-        android:orientation="vertical"
-        android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:layout_weight="1" />
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:orientation="vertical" />
 
     <LinearLayout
         android:orientation="horizontal"

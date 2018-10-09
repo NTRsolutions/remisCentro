@@ -45,13 +45,13 @@
             android:label="@string/title_activity_home"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name="com.apreciasoft.mobile.RemisCentro.Fracments.PaymentCreditCar" />
-        <activity android:name="com.apreciasoft.mobile.RemisCentro.Fracments.activity_card" />
-        <activity android:name="com.apreciasoft.mobile.RemisCentro.Fracments.RegisterCliente" />
-        <activity android:name="com.apreciasoft.mobile.RemisCentro.Fracments.RegisterForm" />
-        <activity android:name="com.apreciasoft.mobile.RemisCentro.Fracments.NewFormDriver" />
-        <activity android:name="com.apreciasoft.mobile.RemisCentro.Fracments.NewFormClient" />
-        <activity android:name="com.apreciasoft.mobile.RemisCentro.Fracments.InfoDetailTravelAc" />
+        <activity android:name="com.apreciasoft.mobile.RemisCentro.Fragments.PaymentCreditCar" />
+        <activity android:name="com.apreciasoft.mobile.RemisCentro.Fragments.activity_card" />
+        <activity android:name="com.apreciasoft.mobile.RemisCentro.Fragments.RegisterCliente" />
+        <activity android:name="com.apreciasoft.mobile.RemisCentro.Fragments.RegisterForm" />
+        <activity android:name="com.apreciasoft.mobile.RemisCentro.Fragments.NewFormDriver" />
+        <activity android:name="com.apreciasoft.mobile.RemisCentro.Fragments.NewFormClient" />
+        <activity android:name="com.apreciasoft.mobile.RemisCentro.Fragments.InfoDetailTravelAc" />
         <activity android:name="com.apreciasoft.mobile.RemisCentro.Util.Signature" />
 
 

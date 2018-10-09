@@ -1,13 +1,12 @@
 package com.apreciasoft.mobile.RemisCentro.Util;
 
-
-import java.util.Date;
-
 import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
+
+import java.util.Date;
 
 public class BroadcastService  extends Service {
     private static final String TAG = "BroadcastService";
