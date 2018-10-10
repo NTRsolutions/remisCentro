@@ -13,7 +13,7 @@ public class HttpConexion {
 
     public static String base;
     /*public static String ip = "192.168.0.14";*/public static String ip = "as-nube.com";
-    public  static String instance = "RemisCentro";
+    public  static String instance = "RemisesCentro";
     //public  static String instance = "developer";
     public static int portWsWeb = 8114;
     public static int portWsCliente = 3000;
